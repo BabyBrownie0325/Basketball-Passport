@@ -1,83 +1,162 @@
-</div>
+<!DOCTYPE html>
+<html lang="es">
+<head>
 
-    <div id="map"></div>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <div class="bottom-nav">
+<title>Basketball Passport</title>
 
-        <a class="nav-item active" href="mapa.html">
-            <span class="nav-icon">🗺️</span>
-            MAPA
-        </a>
+<link rel="stylesheet"
+href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 
-        <a class="nav-item" href="#">
-            <span class="nav-icon">🏀</span>
-            CANCHAS
-        </a>
+<style>
 
-        <a class="nav-item" href="#">
-            <span class="nav-icon">📊</span>
-            PARTIDOS
-        </a>
+*{
+    box-sizing:border-box;
+}
 
-        <a class="nav-item" href="#">
-            <span class="nav-icon">📷</span>
-            GALERÍA
-        </a>
+html,body{
+    margin:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    font-family:Arial,sans-serif;
+    background:#f5f5f2;
+}
 
-        <a class="nav-item" href="#">
-            <span class="nav-icon">👤</span>
-            PERFIL
-        </a>
+header{
+    height:65px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:19px;
+    font-weight:bold;
+    background:#f5f5f2;
+}
 
-    </div>
+#map{
+    width:100%;
+    height:calc(100% - 130px);
+}
+
+.bottom-nav{
+    height:65px;
+    width:100%;
+    background:white;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-around;
+
+    border-top:1px solid #ddd;
+}
+
+.nav{
+    width:20%;
+    text-align:center;
+    text-decoration:none;
+    color:#777;
+    font-size:9px;
+}
+
+.nav span{
+    display:block;
+    font-size:21px;
+    margin-bottom:3px;
+}
+
+.nav.active{
+    color:#111;
+    font-weight:bold;
+}
+
+.ball{
+    font-size:30px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+🏀 &nbsp; BASKETBALL PASSPORT
+</header>
+
+<div id="map"></div>
+
+<nav class="bottom-nav">
+
+<a class="nav active" href="mapa.html">
+<span>🗺️</span>
+MAPA
+</a>
+
+<a class="nav" href="#">
+<span>🏀</span>
+CANCHAS
+</a>
+
+<a class="nav" href="#">
+<span>📊</span>
+PARTIDOS
+</a>
+
+<a class="nav" href="#">
+<span>📷</span>
+GALERÍA
+</a>
+
+<a class="nav" href="#">
+<span>👤</span>
+PERFIL
+</a>
+
+</nav>
 
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-    <script>
+<script>
 
-        const map = L.map("map").setView(
-            [7.5, -66.0],
-            6
-        );
-
-        L.tileLayer(
-            "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-            {
-                maxZoom: 19,
-                attribution: "© OpenStreetMap"
-            }
-        ).addTo(map);
+const map = L.map("map",{
+    zoomControl:true,
+    minZoom:5,
+    maxZoom:18
+}).setView([7.5,-66],6);
 
 
-        const basketballIcon = L.divIcon({
-            className: "",
-            html: '<div class="basketball">🏀</div>',
-            iconSize: [40, 40],
-            iconAnchor: [20, 20]
-        });
+L.tileLayer(
+"https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+{
+    maxZoom:18,
+    updateWhenIdle:true,
+    keepBuffer:2
+}
+).addTo(map);
 
 
-        const canchaEjemplo = L.marker(
-            [10.4806, -66.9036],
-            {
-                icon: basketballIcon
-            }
-        ).addTo(map);
+const icono = L.divIcon({
+    className:"",
+    html:'<div class="ball">🏀</div>',
+    iconSize:[35,35],
+    iconAnchor:[17,17]
+});
 
 
-        canchaEjemplo.bindPopup(`
-            <b>Cancha de prueba 🏀</b>
-            <br><br>
-            📍 Caracas, Venezuela
-            <br>
-            ⭐⭐⭐⭐⭐
-            <br><br>
-            Aquí aparecerán los recuerdos de esta cancha.
-        `);
+L.marker(
+    [10.4806,-66.9036],
+    {icon:icono}
+)
+.addTo(map)
+.bindPopup(
+    "<b>Cancha de prueba 🏀</b><br>Caracas, Venezuela<br>⭐⭐⭐⭐⭐"
+);
 
-    </script>
+
+</script>
 
 </body>
-
 </html>
