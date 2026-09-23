@@ -108,15 +108,15 @@ button{
 
         <div class="form-group">
             <label>Correo electrónico</label>
-            <input type="email" placeholder="tu@email.com">
+            <input id="email" type="email" placeholder="tu@email.com">
         </div>
 
         <div class="form-group">
             <label>Contraseña</label>
-            <input type="password" placeholder="••••••••">
+          <input id="password" type="password" placeholder="••••••••">
         </div>
 
-       <button type="button" onclick="window.location.href='mapa.html'">
+    <button type="button" id="abrirPasaporte">
     ABRIR MI PASAPORTE
 </button>
 
@@ -128,6 +128,40 @@ button{
     </div>
 
 </div>
+<!-- SUPABASE -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+<script>
+    const SUPABASE_URL = "https://mybctirrilqkucnkaztx.supabase.co/";
+    const SUPABASE_KEY = "sb_publishable_tDdp8eOCmHOJJIfVm2WdHA_M3Q962Mc";
+
+    const supabaseClient = supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+
+    document.getElementById("abrirPasaporte").addEventListener("click", async function () {
+
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+
+        if (!email || !password) {
+            alert("Ingresa tu correo y contraseña.");
+            return;
+        }
+
+        const { data, error } = await supabaseClient.auth.signInWithPassword({
+            email: email,
+            password: password
+        });
+
+        if (error) {
+            alert("Correo o contraseña incorrectos.");
+            return;
+        }
+
+        window.location.href = "mapa.html";
+    });
+</script>
 </body>
 </html>
