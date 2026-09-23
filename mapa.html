@@ -16,63 +16,147 @@ href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     box-sizing:border-box;
 }
 
-html,body{
+html, body{
     margin:0;
+    padding:0;
     width:100%;
     height:100%;
     overflow:hidden;
-    font-family:Arial,sans-serif;
-    background:#f5f5f2;
+    font-family:Arial, sans-serif;
 }
 
-header{
-    height:65px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:19px;
-    font-weight:bold;
-    background:#f5f5f2;
-}
+/* MAPA A PANTALLA COMPLETA */
 
 #map{
+    position:absolute;
+    top:0;
+    left:0;
     width:100%;
-    height:calc(100% - 130px);
+    height:100%;
+    z-index:1;
 }
 
-.bottom-nav{
-    height:65px;
-    width:100%;
+/* BOTÓN BALÓN */
+
+#menuButton{
+    position:fixed;
+    top:20px;
+    left:20px;
+
+    width:55px;
+    height:55px;
+
+    border:none;
+    border-radius:50%;
+
     background:white;
 
     display:flex;
     align-items:center;
-    justify-content:space-around;
+    justify-content:center;
 
-    border-top:1px solid #ddd;
+    font-size:32px;
+
+    box-shadow:0 3px 12px rgba(0,0,0,.30);
+
+    cursor:pointer;
+
+    z-index:2000;
 }
 
-.nav{
-    width:20%;
-    text-align:center;
-    text-decoration:none;
-    color:#777;
-    font-size:9px;
+/* MENÚ LATERAL */
+
+#sideMenu{
+    position:fixed;
+
+    top:0;
+    left:-78%;
+
+    width:75%;
+    max-width:330px;
+    height:100%;
+
+    background:#f5f5f2;
+
+    z-index:1900;
+
+    transition:left .30s ease;
+
+    box-shadow:4px 0 18px rgba(0,0,0,.25);
+
+    padding:95px 22px 30px 22px;
 }
 
-.nav span{
-    display:block;
-    font-size:21px;
-    margin-bottom:3px;
+#sideMenu.open{
+    left:0;
 }
 
-.nav.active{
-    color:#111;
+/* TITULO DEL MENU */
+
+.menu-title{
+    font-size:20px;
     font-weight:bold;
+    margin-bottom:6px;
 }
 
-.ball{
-    font-size:30px;
+.menu-subtitle{
+    font-size:13px;
+    color:#777;
+    margin-bottom:30px;
+}
+
+/* OPCIONES */
+
+.menu-item{
+    display:flex;
+    align-items:center;
+
+    gap:15px;
+
+    padding:15px 5px;
+
+    color:#222;
+
+    text-decoration:none;
+
+    font-size:16px;
+
+    border-bottom:1px solid #ddd;
+}
+
+.menu-icon{
+    width:30px;
+    text-align:center;
+    font-size:22px;
+}
+
+/* FONDO OSCURO AL ABRIR MENU */
+
+#overlay{
+    position:fixed;
+
+    top:0;
+    left:0;
+
+    width:100%;
+    height:100%;
+
+    background:rgba(0,0,0,.25);
+
+    z-index:1800;
+
+    display:none;
+}
+
+#overlay.show{
+    display:block;
+}
+
+/* BALONES DEL MAPA */
+
+.basketball-marker{
+    font-size:31px;
+    filter:drop-shadow(0 2px 3px rgba(0,0,0,.35));
 }
 
 </style>
@@ -81,78 +165,247 @@ header{
 
 <body>
 
-<header>
-🏀 &nbsp; BASKETBALL PASSPORT
-</header>
+
+<!-- MAPA -->
 
 <div id="map"></div>
 
-<nav class="bottom-nav">
 
-<a class="nav active" href="mapa.html">
-<span>🗺️</span>
-MAPA
-</a>
+<!-- OSCURECIMIENTO AL ABRIR MENU -->
 
-<a class="nav" href="#">
-<span>🏀</span>
-CANCHAS
-</a>
+<div id="overlay"></div>
 
-<a class="nav" href="#">
-<span>📊</span>
-PARTIDOS
-</a>
 
-<a class="nav" href="#">
-<span>📷</span>
-GALERÍA
-</a>
+<!-- MENÚ LATERAL -->
 
-<a class="nav" href="#">
-<span>👤</span>
-PERFIL
-</a>
+<div id="sideMenu">
 
-</nav>
+    <div class="menu-title">
+        BASKETBALL PASSPORT
+    </div>
 
+    <div class="menu-subtitle">
+        Every court tells a story.
+    </div>
+
+
+    <a class="menu-item" href="#">
+        <span class="menu-icon">👤</span>
+        Mi perfil
+    </a>
+
+
+    <a class="menu-item" href="#">
+        <span class="menu-icon">🏀</span>
+        Mis canchas
+    </a>
+
+
+    <a class="menu-item" href="#">
+        <span class="menu-icon">📊</span>
+        Partidos y estadísticas
+    </a>
+
+
+    <a class="menu-item" href="#">
+        <span class="menu-icon">📷</span>
+        Galería
+    </a>
+
+
+    <a class="menu-item" href="#">
+        <span class="menu-icon">➕</span>
+        Agregar cancha
+    </a>
+
+
+    <a class="menu-item" href="#">
+        <span class="menu-icon">⚙️</span>
+        Configuración
+    </a>
+
+
+    <a class="menu-item" href="login.html">
+        <span class="menu-icon">↪️</span>
+        Cerrar sesión
+    </a>
+
+</div>
+
+
+<!-- BOTÓN PARA ABRIR MENU -->
+
+<button id="menuButton">
+🏀
+</button>
+
+
+<!-- LEAFLET -->
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
+
 <script>
 
-const map = L.map("map",{
-    zoomControl:true,
-    minZoom:5,
-    maxZoom:18
-}).setView([7.5,-66],6);
+/* =========================
+   MAPA
+========================= */
 
+const map = L.map("map", {
+
+    zoomControl:true,
+
+    minZoom:5,
+
+    maxZoom:18
+
+}).setView(
+
+    [7.5,-66],
+
+    6
+
+);
+
+
+/* OPENSTREETMAP */
 
 L.tileLayer(
-"https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-{
-    maxZoom:18,
-    updateWhenIdle:true,
-    keepBuffer:2
-}
+
+    "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+
+    {
+
+        maxZoom:18,
+
+        updateWhenIdle:true,
+
+        keepBuffer:2,
+
+        attribution:"© OpenStreetMap"
+
+    }
+
 ).addTo(map);
 
 
-const icono = L.divIcon({
+/* =========================
+   ICONO DE CANCHA
+========================= */
+
+const basketballIcon = L.divIcon({
+
     className:"",
-    html:'<div class="ball">🏀</div>',
-    iconSize:[35,35],
-    iconAnchor:[17,17]
+
+    html:
+    '<div class="basketball-marker">🏀</div>',
+
+    iconSize:[40,40],
+
+    iconAnchor:[20,20]
+
 });
 
 
-L.marker(
+/* CANCHA DE PRUEBA */
+
+const canchaEjemplo = L.marker(
+
     [10.4806,-66.9036],
-    {icon:icono}
-)
-.addTo(map)
-.bindPopup(
-    "<b>Cancha de prueba 🏀</b><br>Caracas, Venezuela<br>⭐⭐⭐⭐⭐"
+
+    {
+        icon:basketballIcon
+    }
+
+).addTo(map);
+
+
+/* INFORMACIÓN DE LA CANCHA */
+
+canchaEjemplo.bindPopup(`
+
+    <b>Cancha de prueba 🏀</b>
+
+    <br><br>
+
+    📍 Caracas, Venezuela
+
+    <br>
+
+    ⭐⭐⭐⭐⭐
+
+    <br><br>
+
+    Aquí aparecerán tus recuerdos.
+
+`);
+
+
+/* =========================
+   MENU
+========================= */
+
+const menuButton =
+document.getElementById("menuButton");
+
+const sideMenu =
+document.getElementById("sideMenu");
+
+const overlay =
+document.getElementById("overlay");
+
+
+function abrirMenu(){
+
+    sideMenu.classList.add("open");
+
+    overlay.classList.add("show");
+
+}
+
+
+function cerrarMenu(){
+
+    sideMenu.classList.remove("open");
+
+    overlay.classList.remove("show");
+
+}
+
+
+/* BALÓN ABRE Y CIERRA */
+
+menuButton.addEventListener(
+    "click",
+    function(){
+
+        if(sideMenu.classList.contains("open")){
+
+            cerrarMenu();
+
+        }else{
+
+            abrirMenu();
+
+        }
+
+    }
+);
+
+
+/* TOCAR FUERA CIERRA */
+
+overlay.addEventListener(
+    "click",
+    cerrarMenu
+);
+
+
+/* TOCAR MAPA CIERRA */
+
+map.on(
+    "click",
+    cerrarMenu
 );
 
 
