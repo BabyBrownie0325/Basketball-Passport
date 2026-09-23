@@ -1,48 +1,95 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Basketball Passport</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<title>Basketball Passport</title>
 
-        html, body {
-            width: 100%;
-            height: 100%;
-            background: #000;
-            overflow: hidden;
-        }
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-        .welcome {
-            width: 100%;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: #000;
-        }
+html, body {
+    width: 100%;
+    height: 100%;
+    background: #000;
+    overflow: hidden;
+}
 
-        .welcome video {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-    </style>
+.passport {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #000;
+}
+
+.passport video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* Los botones son invisibles y aparecen al terminar el video */
+
+.hotspot {
+    position: absolute;
+    left: 12%;
+    width: 76%;
+    z-index: 10;
+    display: none;
+    cursor: pointer;
+}
+
+/* ABRIR MI PASAPORTE */
+#abrir {
+    top: 62%;
+    height: 9%;
+}
+
+/* CREAR MI PASAPORTE */
+#crear {
+    top: 74%;
+    height: 9%;
+}
+
+</style>
 </head>
 
 <body>
 
-    <div class="welcome">
-        <video autoplay muted playsinline>
-            <source src="basketball-passport.mp4" type="video/mp4">
-        </video>
-    </div>
+<div class="passport">
+
+    <video id="intro" autoplay muted playsinline>
+        <source src="basketball-passport.mp4" type="video/mp4">
+    </video>
+
+    <a id="abrir" class="hotspot" href="login.html"
+       aria-label="Abrir mi pasaporte"></a>
+
+    <a id="crear" class="hotspot" href="registro.html"
+       aria-label="Crear mi pasaporte"></a>
+
+</div>
+
+<script>
+
+const video = document.getElementById("intro");
+const abrir = document.getElementById("abrir");
+const crear = document.getElementById("crear");
+
+video.addEventListener("ended", function() {
+    abrir.style.display = "block";
+    crear.style.display = "block";
+});
+
+</script>
 
 </body>
 </html>
