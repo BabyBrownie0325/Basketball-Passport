@@ -190,7 +190,7 @@
 
 const botonGuardar = document.getElementById("guardarCancha");
 
-botonGuardar.addEventListener("click", function () {
+botonGuardar.addEventListener("click", async function () {
 
     const nombre = document.getElementById("nombre").value.trim();
     const ubicacion = document.getElementById("ubicacion").value.trim();
@@ -199,6 +199,21 @@ botonGuardar.addEventListener("click", function () {
         alert("Escribe el nombre y la ubicación de la cancha.");
         return;
     }
+    
+    const respuesta = await fetch(
+    "https://nominatim.openstreetmap.org/search?format=json&limit=1&q=" +
+    encodeURIComponent(ubicacion)
+);
+
+const resultados = await respuesta.json();
+
+if (resultados.length === 0) {
+    alert("No pude encontrar esa ubicación. Intenta escribirla con más detalle, por ejemplo: Caracas, Venezuela.");
+    return;
+}
+
+const latitud = parseFloat(resultados[0].lat);
+const longitud = parseFloat(resultados[0].lon);
 
     const nuevaCancha = {
 
@@ -207,6 +222,8 @@ botonGuardar.addEventListener("click", function () {
         nombre: nombre,
 
         ubicacion: ubicacion,
+        latitud: latitud,
+longitud: longitud,
 
         estrellas: document.getElementById("estrellas").value,
 
