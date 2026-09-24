@@ -224,6 +224,14 @@
     </div>
 
 </div>
+<script>
+    const datosGuardados = localStorage.getItem("canchaEjemplo");
 
+    if (datosGuardados) {
+        const datosCancha = JSON.parse(datosGuardados);
+
+        console.log("Datos de la cancha:", datosCancha);
+    }
+</script>
 </body>
 </html>
