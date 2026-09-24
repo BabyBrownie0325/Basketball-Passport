@@ -221,5 +221,39 @@
         window.location.href = "cancha.html";
     });
 </script>
+    <!-- SUPABASE -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script>
+    const SUPABASE_URL = "https://mybctirrilqkucnkaztx.supabase.co/";
+    const SUPABASE_KEY = "sb_publishable_tDdp8eOCmHOJJIfVm2WdHA_M3Q962Mc";
+
+    const supabaseClient = supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+        document.getElementById("fotoCancha").addEventListener("change", async function () {
+
+    const archivo = this.files[0];
+
+    if (!archivo) {
+        return;
+    }
+
+    const nombreArchivo =
+        Date.now() + "-" + archivo.name;
+
+    const { data, error } = await supabaseClient.storage
+        .from("fotos-canchas")
+        .upload(nombreArchivo, archivo);
+
+    if (error) {
+        alert("No se pudo subir la foto: " + error.message);
+        return;
+    }
+
+    alert("¡Foto subida correctamente! 🏀📸");
+});
+</script>
 </body>
 </html>
