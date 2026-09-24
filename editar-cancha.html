@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Editar cancha | Basketball Passport</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            color: #222;
+        }
+
+        .contenedor {
+            max-width: 520px;
+            margin: auto;
+            padding: 22px;
+            padding-bottom: 50px;
+        }
+
+        .volver {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: white;
+            text-decoration: none;
+            color: #222;
+            font-size: 24px;
+            margin-bottom: 18px;
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            font-size: 30px;
+        }
+
+        .subtitulo {
+            color: #777;
+            margin-bottom: 28px;
+        }
+
+        .foto {
+            height: 190px;
+            background: #e8e8e8;
+            border-radius: 18px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 25px;
+            font-size: 42px;
+        }
+
+        .foto span {
+            font-size: 14px;
+            margin-top: 10px;
+            color: #666;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin: 18px 0 7px;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 12px;
+            padding: 14px;
+            font-size: 16px;
+        }
+
+        textarea {
+            min-height: 110px;
+            resize: vertical;
+        }
+
+        .fila {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .guardar {
+            width: 100%;
+            margin-top: 28px;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            background: #222;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="contenedor">
+
+    <a href="cancha.html" class="volver">←</a>
+
+    <h1>Editar cancha 🏀</h1>
+    <div class="subtitulo">
+        Guarda los recuerdos de esta cancha.
+    </div>
+
+    <div class="foto">
+        📷
+        <span>Agregar foto</span>
+    </div>
+
+    <label>Nombre de la cancha</label>
+    <input
+        id="nombre"
+        type="text"
+        value="Cancha de prueba"
+    >
+
+    <label>Ubicación</label>
+    <input
+        id="ubicacion"
+        type="text"
+        value="Caracas, Venezuela"
+    >
+
+    <label>Calificación</label>
+    <select id="estrellas">
+        <option value="5">⭐⭐⭐⭐⭐</option>
+        <option value="4">⭐⭐⭐⭐</option>
+        <option value="3">⭐⭐⭐</option>
+        <option value="2">⭐⭐</option>
+        <option value="1">⭐</option>
+    </select>
+
+    <label>Fecha de visita</label>
+    <input
+        id="fecha"
+        type="date"
+        value="2026-09-23"
+    >
+
+    <div class="fila">
+
+        <div>
+            <label>Partidos</label>
+            <input id="partidos" type="number" value="12">
+        </div>
+
+        <div>
+            <label>Victorias</label>
+            <input id="victorias" type="number" value="8">
+        </div>
+
+        <div>
+            <label>Derrotas</label>
+            <input id="derrotas" type="number" value="4">
+        </div>
+
+        <div>
+            <label>Puntos</label>
+            <input id="puntos" type="number" value="96">
+        </div>
+
+    </div>
+
+    <label>Mi recuerdo</label>
+
+    <textarea id="recuerdo">Gran cancha. Uno de mis lugares favoritos para jugar con los panas. 🏀</textarea>
+
+    <button class="guardar" type="button">
+        GUARDAR CAMBIOS
+    </button>
+
+</div>
+
+</body>
+</html>
