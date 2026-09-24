@@ -25,8 +25,6 @@ html, body{
     font-family:Arial, sans-serif;
 }
 
-/* MAPA A PANTALLA COMPLETA */
-
 #map{
     position:absolute;
     top:0;
@@ -64,7 +62,7 @@ html, body{
     z-index:2000;
 }
 
-/* MENÚ LATERAL */
+/* MENÚ */
 
 #sideMenu{
     position:fixed;
@@ -105,15 +103,12 @@ html, body{
 .menu-item{
     display:flex;
     align-items:center;
-
     gap:15px;
 
     padding:15px 5px;
 
     color:#222;
-
     text-decoration:none;
-
     font-size:16px;
 
     border-bottom:1px solid #ddd;
@@ -125,11 +120,10 @@ html, body{
     font-size:22px;
 }
 
-/* FONDO OSCURO */
+/* OVERLAY */
 
 #overlay{
     position:fixed;
-
     top:0;
     left:0;
 
@@ -213,7 +207,6 @@ html, body{
 
 <body>
 
-
 <div id="map"></div>
 
 <div id="overlay"></div>
@@ -261,7 +254,7 @@ html, body{
         Configuración
     </a>
 
-    <a class="menu-item" href="login.html">
+    <a class="menu-item" href="#" id="cerrarSesion">
         <span class="menu-icon">↪️</span>
         Cerrar sesión
     </a>
@@ -278,8 +271,29 @@ html, body{
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
+<!-- SUPABASE -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 
 <script>
+
+/* =========================
+   SUPABASE
+========================= */
+
+const SUPABASE_URL =
+    "https://mybctirrilqkucnkaztx.supabase.co/";
+
+const SUPABASE_KEY =
+    "sb_publishable_tDdp8eOCmHOJJIfVm2WdHA_M3Q962Mc";
+
+const supabaseClient =
+    supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+
 
 /* =========================
    MAPA
@@ -325,140 +339,74 @@ L.tileLayer(
    ICONO
 ========================= */
 
-const basketballIcon = L.divIcon({
+const basketballIcon =
+    L.divIcon({
 
-    className:"",
+        className:"",
 
-    html:
-        '<div class="basketball-marker">🏀</div>',
+        html:
+            '<div class="basketball-marker">🏀</div>',
 
-    iconSize:[40,40],
+        iconSize:[40,40],
 
-    iconAnchor:[20,20]
-
-});
-
-
-/* =========================
-   CANCHAS GUARDADAS
-========================= */
-
-let canchas = JSON.parse(
-
-    localStorage.getItem(
-        "canchasBasketballPassport"
-    )
-
-) || [];
-
-
-/* CANCHA DE PRUEBA */
-
-if (canchas.length === 0) {
-
-    canchas.push({
-
-        id:Date.now(),
-
-        nombre:"Cancha de prueba",
-
-        ubicacion:"Caracas, Venezuela",
-
-        estrellas:5,
-
-        latitud:10.4806,
-
-        longitud:-66.9036,
-
-        foto:""
+        iconAnchor:[20,20]
 
     });
 
 
+/* =========================
+   ABRIR CANCHA
+========================= */
+
+function abrirCancha(id) {
+
     localStorage.setItem(
-
-        "canchasBasketballPassport",
-
-        JSON.stringify(canchas)
-
+        "canchaSeleccionada",
+        id
     );
+
+    window.location.href =
+        "cancha.html";
 
 }
 
 
 /* =========================
-   MOSTRAR CANCHAS
+   CREAR POPUP
 ========================= */
 
-canchas.forEach(function(cancha) {
+function contenidoPopup(
+    cancha,
+    urlFoto = ""
+) {
 
-
-    const lat =
-        cancha.latitud ??
-        cancha.lat;
-
-
-    const lng =
-        cancha.longitud ??
-        cancha.logongitud ??
-        cancha.lng;
-
-
-    if (lat == null || lng == null) {
-
-        return;
-
-    }
-
-
-    const marcador = L.marker(
-
-        [lat,lng],
-
-        {
-            icon:basketballIcon
-        }
-
-    ).addTo(map);
-
-
-    /*
-       Si la cancha tiene foto,
-       creamos el bloque de imagen.
-
-       Si no tiene foto,
-       no mostramos ningún espacio vacío.
-    */
-
-    const fotoPopup =
-        cancha.foto
+    const foto =
+        urlFoto
         ?
         `
         <img
-            src="${cancha.foto}"
+            src="${urlFoto}"
             class="popup-foto"
-            alt="Foto de ${cancha.nombre}"
+            alt="Foto de la cancha"
         >
         `
         :
         "";
 
 
-    marcador.bindPopup(`
+    return `
 
         <div class="popup-cancha">
 
-            ${fotoPopup}
+            ${foto}
 
             <div class="popup-nombre">
                 ${cancha.nombre} 🏀
             </div>
 
-
             <div class="popup-ubicacion">
                 📍 ${cancha.ubicacion}
             </div>
-
 
             <div class="popup-estrellas">
 
@@ -470,42 +418,226 @@ canchas.forEach(function(cancha) {
 
             </div>
 
-
             <button
                 class="popup-boton"
                 onclick="abrirCancha('${cancha.id}')"
             >
-
                 VER CANCHA →
-
             </button>
 
         </div>
 
-    `);
+    `;
 
-});
+}
 
 
 /* =========================
-   ABRIR CANCHA
+   CARGAR CANCHAS
 ========================= */
 
-function abrirCancha(id) {
-
-    localStorage.setItem(
-
-        "canchaSeleccionada",
-
-        id
-
-    );
+async function cargarCanchas() {
 
 
-    window.location.href =
-        "cancha.html";
+    /*
+       Primero comprobamos que exista
+       una sesión válida.
+
+       Las fotos son privadas y solamente
+       un usuario autenticado puede verlas.
+    */
+
+    const {
+        data: { session }
+    } =
+        await supabaseClient.auth
+            .getSession();
+
+
+    if (!session) {
+
+        window.location.replace(
+            "login.html"
+        );
+
+        return;
+
+    }
+
+
+    let canchas =
+        JSON.parse(
+            localStorage.getItem(
+                "canchasBasketballPassport"
+            )
+        ) || [];
+
+
+    /* CANCHA DE PRUEBA */
+
+    if (canchas.length === 0) {
+
+        canchas.push({
+
+            id:Date.now(),
+
+            nombre:
+                "Cancha de prueba",
+
+            ubicacion:
+                "Caracas, Venezuela",
+
+            estrellas:5,
+
+            latitud:10.4806,
+
+            longitud:-66.9036,
+
+            fotoRuta:"",
+
+            foto:""
+
+        });
+
+
+        localStorage.setItem(
+
+            "canchasBasketballPassport",
+
+            JSON.stringify(canchas)
+
+        );
+
+    }
+
+
+    /* =========================
+       DIBUJAR CANCHAS
+    ========================= */
+
+    for (const cancha of canchas) {
+
+
+        /*
+           Compatibilidad con coordenadas
+           guardadas anteriormente.
+        */
+
+        const lat =
+            cancha.latitud ??
+            cancha.lat;
+
+
+        const lng =
+            cancha.longitud ??
+            cancha.logongitud ??
+            cancha.lng;
+
+
+        if (
+            lat == null ||
+            lng == null
+        ) {
+
+            continue;
+
+        }
+
+
+        const marcador =
+            L.marker(
+
+                [lat,lng],
+
+                {
+                    icon:
+                        basketballIcon
+                }
+
+            ).addTo(map);
+
+
+        /*
+           Primero mostramos el popup
+           normalmente.
+
+           Así, aunque la foto falle,
+           la cancha sigue funcionando.
+        */
+
+        marcador.bindPopup(
+            contenidoPopup(
+                cancha
+            )
+        );
+
+
+        /* =========================
+           FOTO PRIVADA NUEVA
+        ========================= */
+
+        if (cancha.fotoRuta) {
+
+
+            const {
+                data,
+                error
+            } =
+                await supabaseClient.storage
+
+                    .from(
+                        "fotos-canchas"
+                    )
+
+                    .createSignedUrl(
+
+                        cancha.fotoRuta,
+
+                        3600
+
+                    );
+
+
+            if (
+                !error &&
+                data &&
+                data.signedUrl
+            ) {
+
+                marcador.setPopupContent(
+
+                    contenidoPopup(
+
+                        cancha,
+
+                        data.signedUrl
+
+                    )
+
+                );
+
+            }
+
+        }
+
+        /*
+           Las canchas antiguas que todavía
+           tengan "foto" no intentarán cargar
+           una URL pública rota.
+
+           Más adelante, cuando editemos esas
+           canchas, las pasaremos automáticamente
+           al sistema fotoRuta.
+        */
+
+    }
 
 }
+
+
+/* INICIAR */
+
+cargarCanchas();
 
 
 /* =========================
@@ -517,12 +649,10 @@ const menuButton =
         "menuButton"
     );
 
-
 const sideMenu =
     document.getElementById(
         "sideMenu"
     );
-
 
 const overlay =
     document.getElementById(
@@ -533,11 +663,9 @@ const overlay =
 menuButton.onclick =
     function() {
 
-
         sideMenu.classList.toggle(
             "open"
         );
-
 
         overlay.classList.toggle(
             "show"
@@ -549,11 +677,9 @@ menuButton.onclick =
 overlay.onclick =
     function() {
 
-
         sideMenu.classList.remove(
             "open"
         );
-
 
         overlay.classList.remove(
             "show"
@@ -583,7 +709,6 @@ agregarCancha.onclick =
             "open"
         );
 
-
         overlay.classList.remove(
             "show"
         );
@@ -601,7 +726,6 @@ agregarCancha.onclick =
 
                 const latitud =
                     e.latlng.lat;
-
 
                 const longitud =
                     e.latlng.lng;
@@ -644,16 +768,12 @@ agregarCancha.onclick =
                             🏀 Nueva cancha
                         </strong>
 
-
                         <p style="
                             font-size:13px;
                             margin:10px 0;
                         ">
-
                             ¿Es esta la ubicación correcta?
-
                         </p>
-
 
                         <button
                             id="confirmarUbicacion"
@@ -669,11 +789,8 @@ agregarCancha.onclick =
                                 cursor:pointer;
                             "
                         >
-
                             CONFIRMAR UBICACIÓN →
-
                         </button>
-
 
                         <button
                             id="quitarBalon"
@@ -687,9 +804,7 @@ agregarCancha.onclick =
                                 cursor:pointer;
                             "
                         >
-
                             ✕ Quitar balón
-
                         </button>
 
                     </div>
@@ -718,11 +833,8 @@ agregarCancha.onclick =
                     );
 
 
-                /* QUITAR */
-
                 botonQuitar.onclick =
                     function() {
-
 
                         map.removeLayer(
                             marcadorTemporal
@@ -730,8 +842,6 @@ agregarCancha.onclick =
 
                     };
 
-
-                /* CONFIRMAR */
 
                 botonConfirmar.onclick =
                     function() {
@@ -770,63 +880,30 @@ agregarCancha.onclick =
 
     };
 
-</script>
 
+/* =========================
+   CERRAR SESIÓN
+========================= */
 
-<!-- =========================
-     SUPABASE
-========================= -->
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-
-<script>
-
-const SUPABASE_URL =
-    "https://mybctirrilqkucnkaztx.supabase.co/";
-
-
-const SUPABASE_KEY =
-    "sb_publishable_tDdp8eOCmHOJJIfVm2WdHA_M3Q962Mc";
-
-
-const supabaseClient =
-    supabase.createClient(
-
-        SUPABASE_URL,
-
-        SUPABASE_KEY
-
+const cerrarSesion =
+    document.getElementById(
+        "cerrarSesion"
     );
 
 
-async function protegerPasaporte() {
+cerrarSesion.onclick =
+    async function(event) {
 
+        event.preventDefault();
 
-    const {
-
-        data:{
-            session
-        }
-
-    } =
         await supabaseClient.auth
-            .getSession();
-
-
-    if (!session) {
-
+            .signOut();
 
         window.location.replace(
             "login.html"
         );
 
-    }
-
-}
-
-
-protegerPasaporte();
+    };
 
 </script>
 
