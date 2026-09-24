@@ -444,19 +444,40 @@ agregarCancha.onclick = function (event) {
             { icon: basketballIcon, draggable: true }
         ).addTo(map);
 
-        marcadorTemporal.bindPopup(`
-    <div style="text-align:center;">
+      marcadorTemporal.bindPopup(`
+    <div style="text-align:center; width:190px;">
         <strong>🏀 Nueva cancha</strong>
-        <br><br>
+
+        <p style="font-size:13px;">
+            ¿Es esta la ubicación correcta?
+        </p>
 
         <button
-            onclick="map.removeLayer(this._marcador)"
+            id="confirmarUbicacion"
             style="
+                width:100%;
                 border:none;
-                padding:8px 14px;
+                padding:10px;
+                margin-bottom:7px;
                 border-radius:8px;
                 background:#222;
                 color:white;
+                font-weight:bold;
+                cursor:pointer;
+            "
+        >
+            CONFIRMAR UBICACIÓN →
+        </button>
+
+        <button
+            id="quitarBalon"
+            style="
+                width:100%;
+                border:1px solid #ccc;
+                padding:8px;
+                border-radius:8px;
+                background:white;
+                color:#222;
                 cursor:pointer;
             "
         >
@@ -465,8 +486,29 @@ agregarCancha.onclick = function (event) {
     </div>
 `).openPopup();
 
-/* Guardamos referencia para poder eliminarlo */
-const botonQuitar = marcadorTemporal
+
+/* BOTONES DEL BALÓN TEMPORAL */
+
+const popup = marcadorTemporal.getPopup().getElement();
+
+popup.querySelector("#quitarBalon").onclick = function () {
+    map.removeLayer(marcadorTemporal);
+};
+
+popup.querySelector("#confirmarUbicacion").onclick = function () {
+
+    const posicion = marcadorTemporal.getLatLng();
+
+    localStorage.setItem(
+        "nuevaCanchaUbicacion",
+        JSON.stringify({
+            latitud: posicion.lat,
+            longitud: posicion.lng
+        })
+    );
+
+    window.location.href = "agregar-cancha.html";
+};
     .getPopup()
     .getElement()
     .querySelector("button");
