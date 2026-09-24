@@ -333,8 +333,15 @@ if (canchas.length === 0) {
 /* Mostrar todas las canchas en el mapa */
 canchas.forEach(function(cancha) {
 
+    const lat = cancha.latitud ?? cancha.lat;
+    const lng = cancha.longitud ?? cancha.logongitud ?? cancha.lng;
+
+    if (lat == null || lng == null) {
+        return;
+    }
+
     const marcador = L.marker(
-        [cancha.latitud, cancha.longitud],
+        [lat, lng],
         { icon: basketballIcon }
     ).addTo(map);
 
