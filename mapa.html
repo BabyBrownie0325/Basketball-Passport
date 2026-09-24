@@ -34,59 +34,39 @@ html, body{
     z-index:1;
 }
 
-
-/* =========================
-   BOTÓN BALÓN
-========================= */
+/* BOTÓN BALÓN */
 
 #menuButton{
     position:fixed;
     top:20px;
     left:20px;
-
     width:55px;
     height:55px;
-
     border:none;
     border-radius:50%;
-
     background:white;
-
     display:flex;
     align-items:center;
     justify-content:center;
-
     font-size:32px;
-
     box-shadow:0 3px 12px rgba(0,0,0,.30);
-
     cursor:pointer;
-
     z-index:2000;
 }
 
-
-/* =========================
-   MENÚ
-========================= */
+/* MENÚ */
 
 #sideMenu{
     position:fixed;
     top:0;
     left:-78%;
-
     width:75%;
     max-width:330px;
     height:100%;
-
     background:#f5f5f2;
-
     z-index:1900;
-
     transition:left .30s ease;
-
     box-shadow:4px 0 18px rgba(0,0,0,.25);
-
     padding:95px 22px 30px 22px;
 }
 
@@ -110,13 +90,10 @@ html, body{
     display:flex;
     align-items:center;
     gap:15px;
-
     padding:15px 5px;
-
     color:#222;
     text-decoration:none;
     font-size:16px;
-
     border-bottom:1px solid #ddd;
 }
 
@@ -126,23 +103,16 @@ html, body{
     font-size:22px;
 }
 
-
-/* =========================
-   OVERLAY
-========================= */
+/* OVERLAY */
 
 #overlay{
     position:fixed;
     top:0;
     left:0;
-
     width:100%;
     height:100%;
-
     background:rgba(0,0,0,.25);
-
     z-index:1800;
-
     display:none;
 }
 
@@ -150,22 +120,14 @@ html, body{
     display:block;
 }
 
-
-/* =========================
-   BALONES
-========================= */
+/* BALONES */
 
 .basketball-marker{
     font-size:31px;
-    filter:drop-shadow(
-        0 2px 3px rgba(0,0,0,.35)
-    );
+    filter:drop-shadow(0 2px 3px rgba(0,0,0,.35));
 }
 
-
-/* =========================
-   POPUP DE CANCHA
-========================= */
+/* POPUP */
 
 .popup-cancha{
     width:220px;
@@ -175,13 +137,9 @@ html, body{
 .popup-foto{
     width:100%;
     height:125px;
-
     object-fit:cover;
-
     border-radius:10px;
-
     margin-bottom:10px;
-
     display:block;
 }
 
@@ -204,17 +162,12 @@ html, body{
 
 .popup-boton{
     width:100%;
-
     border:none;
     border-radius:8px;
-
     padding:10px;
-
     background:#222;
     color:white;
-
     font-weight:bold;
-
     cursor:pointer;
 }
 
@@ -224,24 +177,12 @@ html, body{
 
 <body>
 
-
-<!-- =========================
-     MAPA
-========================= -->
-
 <div id="map"></div>
-
-
-<!-- =========================
-     OVERLAY
-========================= -->
 
 <div id="overlay"></div>
 
 
-<!-- =========================
-     MENÚ
-========================= -->
+<!-- MENÚ -->
 
 <div id="sideMenu">
 
@@ -254,25 +195,25 @@ html, body{
     </div>
 
 
-    <a class="menu-item" href="#">
+    <a class="menu-item" href="perfil.html">
         <span class="menu-icon">👤</span>
         Mi perfil
     </a>
 
 
-    <a class="menu-item" href="#">
+    <a class="menu-item" href="mis-canchas.html">
         <span class="menu-icon">🏀</span>
         Mis canchas
     </a>
 
 
-    <a class="menu-item" href="#">
+    <a class="menu-item" href="estadisticas.html">
         <span class="menu-icon">📊</span>
         Partidos y estadísticas
     </a>
 
 
-    <a class="menu-item" href="#">
+    <a class="menu-item" href="#" id="galeriaPendiente">
         <span class="menu-icon">📷</span>
         Galería
     </a>
@@ -288,7 +229,7 @@ html, body{
     </a>
 
 
-    <a class="menu-item" href="#">
+    <a class="menu-item" href="configuracion.html">
         <span class="menu-icon">⚙️</span>
         Configuración
     </a>
@@ -306,10 +247,6 @@ html, body{
 </div>
 
 
-<!-- =========================
-     BOTÓN MENÚ
-========================= -->
-
 <button
     id="menuButton"
     type="button"
@@ -318,18 +255,14 @@ html, body{
 </button>
 
 
-<!-- =========================
-     LEAFLET
-========================= -->
+<!-- LEAFLET -->
 
 <script
 src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
 </script>
 
 
-<!-- =========================
-     SUPABASE
-========================= -->
+<!-- SUPABASE -->
 
 <script
 src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
@@ -337,7 +270,6 @@ src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
 
 
 <script>
-
 
 /* =========================
    SUPABASE
@@ -348,7 +280,6 @@ const SUPABASE_URL =
 
 const SUPABASE_KEY =
     "sb_publishable_tDdp8eOCmHOJJIfVm2WdHA_M3Q962Mc";
-
 
 const supabaseClient =
     supabase.createClient(
@@ -434,9 +365,7 @@ function contenidoPopup(
     urlFoto = ""
 ) {
 
-
     let foto = "";
-
 
     if (urlFoto) {
 
@@ -499,8 +428,6 @@ function contenidoPopup(
 async function cargarCanchas() {
 
 
-    /* COMPROBAR SESIÓN */
-
     const {
         data: { session }
     } =
@@ -519,8 +446,6 @@ async function cargarCanchas() {
     }
 
 
-    /* OBTENER CANCHAS */
-
     let canchas =
         JSON.parse(
             localStorage.getItem(
@@ -529,9 +454,7 @@ async function cargarCanchas() {
         ) || [];
 
 
-    /* =========================
-       CANCHA DE PRUEBA
-    ========================= */
+    /* CANCHA DE PRUEBA */
 
     if (canchas.length === 0) {
 
@@ -539,11 +462,9 @@ async function cargarCanchas() {
 
             id:Date.now(),
 
-            nombre:
-                "Cancha de prueba",
+            nombre:"Cancha de prueba",
 
-            ubicacion:
-                "Caracas, Venezuela",
+            ubicacion:"Caracas, Venezuela",
 
             estrellas:5,
 
@@ -569,14 +490,10 @@ async function cargarCanchas() {
     }
 
 
-    /* =========================
-       DIBUJAR CANCHAS
-    ========================= */
+    /* DIBUJAR CANCHAS */
 
     for (const cancha of canchas) {
 
-
-        /* COORDENADAS */
 
         const lat =
             cancha.latitud ??
@@ -599,8 +516,6 @@ async function cargarCanchas() {
         }
 
 
-        /* CREAR MARCADOR */
-
         const marcador =
             L.marker(
 
@@ -614,14 +529,6 @@ async function cargarCanchas() {
             ).addTo(map);
 
 
-        /*
-           Primero mostramos el popup
-           sin foto.
-
-           Después comprobamos si existe
-           una foto disponible.
-        */
-
         marcador.bindPopup(
             contenidoPopup(
                 cancha
@@ -629,10 +536,7 @@ async function cargarCanchas() {
         );
 
 
-        /* =========================
-           SISTEMA NUEVO:
-           FOTO PRIVADA CON RUTA
-        ========================= */
+        /* FOTO PRIVADA */
 
         if (cancha.fotoRuta) {
 
@@ -676,14 +580,10 @@ async function cargarCanchas() {
 
             }
 
-
         }
 
 
-        /* =========================
-           SISTEMA ANTERIOR:
-           FOTO GUARDADA COMO URL
-        ========================= */
+        /* FOTO ANTIGUA */
 
         else if (cancha.foto) {
 
@@ -723,12 +623,10 @@ const menuButton =
         "menuButton"
     );
 
-
 const sideMenu =
     document.getElementById(
         "sideMenu"
     );
-
 
 const overlay =
     document.getElementById(
@@ -765,6 +663,24 @@ overlay.onclick =
 
 
 /* =========================
+   GALERÍA PENDIENTE
+========================= */
+
+document.getElementById(
+    "galeriaPendiente"
+).onclick =
+    function(event) {
+
+        event.preventDefault();
+
+        alert(
+            "📷 La galería estará disponible próximamente."
+        );
+
+    };
+
+
+/* =========================
    AGREGAR CANCHA
 ========================= */
 
@@ -781,8 +697,6 @@ agregarCancha.onclick =
         event.preventDefault();
 
 
-        /* CERRAR MENÚ */
-
         sideMenu.classList.remove(
             "open"
         );
@@ -797,8 +711,6 @@ agregarCancha.onclick =
         );
 
 
-        /* ESPERAR UN TOQUE */
-
         map.once(
 
             "click",
@@ -809,14 +721,9 @@ agregarCancha.onclick =
                 const latitud =
                     e.latlng.lat;
 
-
                 const longitud =
                     e.latlng.lng;
 
-
-                /* =========================
-                   BALÓN TEMPORAL
-                ========================= */
 
                 const marcadorTemporal =
                     L.marker(
@@ -838,10 +745,6 @@ agregarCancha.onclick =
 
                     ).addTo(map);
 
-
-                /* =========================
-                   POPUP TEMPORAL
-                ========================= */
 
                 marcadorTemporal.bindPopup(`
 
@@ -904,10 +807,6 @@ agregarCancha.onclick =
                 marcadorTemporal.openPopup();
 
 
-                /* =========================
-                   BOTONES DEL POPUP
-                ========================= */
-
                 const popup =
                     marcadorTemporal
                         .getPopup()
@@ -926,8 +825,6 @@ agregarCancha.onclick =
                     );
 
 
-                /* QUITAR BALÓN */
-
                 botonQuitar.onclick =
                     function() {
 
@@ -938,26 +835,14 @@ agregarCancha.onclick =
                     };
 
 
-                /* CONFIRMAR */
-
                 botonConfirmar.onclick =
                     function() {
 
-
-                        /*
-                           Obtener posición final,
-                           por si se movió el balón.
-                        */
 
                         const posicion =
                             marcadorTemporal
                                 .getLatLng();
 
-
-                        /*
-                           Guardar temporalmente
-                           las coordenadas.
-                        */
 
                         localStorage.setItem(
 
@@ -975,10 +860,6 @@ agregarCancha.onclick =
 
                         );
 
-
-                        /*
-                           Abrir formulario.
-                        */
 
                         window.location.href =
                             "agregar-cancha.html";
