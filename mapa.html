@@ -311,7 +311,9 @@ const basketballIcon = L.divIcon({
    CANCHAS GUARDADAS
 ========================= */
 
-let canchas = JSON.parse(localStorage.getItem("canchas")) || [];
+let canchas = JSON.parse(
+    localStorage.getItem("canchasBasketballPassport")
+) || [];
 
 /* Si todavía no existe ninguna cancha,
    conservamos la cancha de prueba */
@@ -321,18 +323,18 @@ if (canchas.length === 0) {
         nombre: "Cancha de prueba",
         ubicacion: "Caracas, Venezuela",
         estrellas: 5,
-        lat: 10.4806,
-        lng: -66.9036
+        latitud: 10.4806,
+        lngongitud: -66.9036
     });
 
-    localStorage.setItem("canchas", JSON.stringify(canchas));
+    localStorage.setItem("canchasBasketballPassport", JSON.stringify(canchas));
 }
 
 /* Mostrar todas las canchas en el mapa */
 canchas.forEach(function(cancha) {
 
     const marcador = L.marker(
-        [cancha.lat, cancha.lng],
+        [cancha.latitud, cancha.longitud],
         { icon: basketballIcon }
     ).addTo(map);
 
