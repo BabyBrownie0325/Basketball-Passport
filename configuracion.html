@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Configuración | Basketball Passport</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+    background:#f5f5f5;
+    color:#222;
+}
+
+.pagina{
+    max-width:650px;
+    margin:auto;
+    padding:28px 22px 60px;
+}
+
+/* VOLVER */
+
+.volver{
+    width:52px;
+    height:52px;
+    border:none;
+    border-radius:50%;
+    background:white;
+    font-size:28px;
+    cursor:pointer;
+    box-shadow:0 2px 10px rgba(0,0,0,.08);
+    margin-bottom:24px;
+}
+
+h1{
+    font-size:36px;
+    margin:0 0 7px;
+}
+
+.subtitulo{
+    color:#777;
+    font-size:16px;
+    margin-bottom:28px;
+}
+
+/* SECCIONES */
+
+.seccion{
+    margin-bottom:25px;
+}
+
+.seccion-titulo{
+    font-size:12px;
+    font-weight:bold;
+    color:#888;
+    letter-spacing:1px;
+    margin:0 0 9px 5px;
+}
+
+.tarjeta{
+    background:white;
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:0 3px 15px rgba(0,0,0,.05);
+}
+
+/* FILAS */
+
+.fila{
+    min-height:68px;
+    padding:14px 17px;
+
+    display:flex;
+    align-items:center;
+    gap:14px;
+
+    border-bottom:1px solid #eee;
+}
+
+.fila:last-child{
+    border-bottom:none;
+}
+
+.icono{
+    width:40px;
+    height:40px;
+    min-width:40px;
+
+    border-radius:12px;
+    background:#f2f2f2;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:21px;
+}
+
+.contenido{
+    flex:1;
+    min-width:0;
+}
+
+.nombre{
+    font-size:15px;
+    font-weight:bold;
+    margin-bottom:3px;
+}
+
+.detalle{
+    font-size:12px;
+    color:#888;
+
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+/* META */
+
+.selector-meta{
+    border:none;
+    background:#f1f1f1;
+    border-radius:10px;
+    padding:9px 10px;
+
+    font-size:14px;
+    font-weight:bold;
+
+    color:#222;
+}
+
+/* BOTONES */
+
+.boton-fila{
+    width:100%;
+    border:none;
+    background:white;
+
+    text-align:left;
+
+    cursor:pointer;
+
+    color:#222;
+}
+
+.boton-fila:active{
+    background:#f7f7f7;
+}
+
+.flecha{
+    font-size:22px;
+    color:#aaa;
+}
+
+/* ACERCA */
+
+.acerca{
+    text-align:center;
+    padding:25px 20px;
+}
+
+.acerca-balon{
+    font-size:45px;
+    margin-bottom:10px;
+}
+
+.acerca-nombre{
+    font-size:17px;
+    font-weight:bold;
+}
+
+.acerca-frase{
+    color:#777;
+    font-size:13px;
+    margin-top:5px;
+}
+
+.version{
+    color:#aaa;
+    font-size:11px;
+    margin-top:9px;
+}
+
+/* CERRAR SESIÓN */
+
+.cerrar-sesion{
+    width:100%;
+
+    border:none;
+    border-radius:17px;
+
+    padding:17px;
+
+    background:#222;
+    color:white;
+
+    font-size:16px;
+    font-weight:bold;
+
+    cursor:pointer;
+
+    margin-top:3px;
+}
+
+/* ZONA PELIGRO */
+
+.peligro{
+    margin-top:35px;
+}
+
+.peligro .seccion-titulo{
+    color:#b24a4a;
+}
+
+.eliminar{
+    width:100%;
+
+    border:1px solid #e3b8b8;
+    border-radius:17px;
+
+    padding:16px;
+
+    background:white;
+    color:#b23b3b;
+
+    font-size:14px;
+    font-weight:bold;
+
+    cursor:pointer;
+}
+
+/* MENSAJE */
+
+.mensaje{
+    position:fixed;
+
+    left:50%;
+    bottom:25px;
+
+    transform:translateX(-50%) translateY(100px);
+
+    background:#222;
+    color:white;
+
+    border-radius:14px;
+
+    padding:13px 18px;
+
+    font-size:13px;
+
+    opacity:0;
+
+    transition:.3s;
+
+    z-index:5000;
+
+    text-align:center;
+
+    width:max-content;
+    max-width:85%;
+}
+
+.mensaje.mostrar{
+    opacity:1;
+    transform:translateX(-50%) translateY(0);
+}
+
+@media(max-width:500px){
+
+    h1{
+        font-size:32px;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="pagina">
+
+    <button
+        class="volver"
+        type="button"
+        onclick="window.location.href='mapa.html'"
+    >
+        ←
+    </button>
+
+
+    <h1>Configuración ⚙️</h1>
+
+    <div class="subtitulo">
+        Personaliza tu Basketball Passport.
+    </div>
+
+
+    <!-- CUENTA -->
+
+    <div class="seccion">
+
+        <div class="seccion-titulo">
+            CUENTA
+        </div>
+
+        <div class="tarjeta">
+
+
+            <div class="fila">
+
+                <div class="icono">
+                    ✉️
+                </div>
+
+                <div class="contenido">
+
+                    <div class="nombre">
+                        Correo
+                    </div>
+
+                    <div
+                        class="detalle"
+                        id="correoUsuario"
+                    >
+                        Cargando...
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <button
+                class="fila boton-fila"
+                id="cambiarContrasena"
+                type="button"
+            >
+
+                <div class="icono">
+                    🔐
+                </div>
+
+                <div class="contenido">
+
+                    <div class="nombre">
+                        Cambiar contraseña
+                    </div>
+
+                    <div class="detalle">
+                        Recibe un enlace seguro por correo
+                    </div>
+
+                </div>
+
+                <div class="flecha">
+                    ›
+                </div>
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- PASAPORTE -->
+
+    <div class="seccion">
+
+        <div class="seccion-titulo">
+            MI PASAPORTE
+        </div>
+
+        <div class="tarjeta">
+
+
+            <div class="fila">
+
+                <div class="icono">
+                    🏆
+                </div>
+
+                <div class="contenido">
+
+                    <div class="nombre">
+                        Meta mensual
+                    </div>
+
+                    <div class="detalle">
+                        Partidos que quieres jugar cada mes
+                    </div>
+
+                </div>
+
+
+                <select
+                    class="selector-meta"
+                    id="metaMensual"
+                >
+
+                    <option value="5">
+                        5
+                    </option>
+
+                    <option value="10">
+                        10
+                    </option>
+
+                    <option value="15">
+                        15
+                    </option>
+
+                    <option value="20">
+                        20
+                    </option>
+
+                    <option value="25">
+                        25
+                    </option>
+
+                    <option value="30">
+                        30
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- APARIENCIA -->
+
+    <div class="seccion">
+
+        <div class="seccion-titulo">
+            APARIENCIA
+        </div>
+
+        <div class="tarjeta">
+
+
+            <div class="fila">
+
+                <div class="icono">
+                    🎨
+                </div>
+
+                <div class="contenido">
+
+                    <div class="nombre">
+                        Tema
+                    </div>
+
+                    <div class="detalle">
+                        Más opciones próximamente
+                    </div>
+
+                </div>
+
+                <div style="
+                    font-size:13px;
+                    color:#888;
+                ">
+                    Claro
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ACERCA -->
+
+    <div class="seccion">
+
+        <div class="seccion-titulo">
+            ACERCA DE
+        </div>
+
+        <div class="tarjeta">
+
+            <div class="acerca">
+
+                <div class="acerca-balon">
+                    🏀
+                </div>
+
+                <div class="acerca-nombre">
+                    Basketball Passport
+                </div>
+
+                <div class="acerca-frase">
+                    Every court tells a story.
+                </div>
+
+                <div class="version">
+                    Versión 1.0
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- CERRAR SESIÓN -->
+
+    <button
+        class="cerrar-sesion"
+        id="cerrarSesion"
+        type="button"
+    >
+        ↪️ CERRAR SESIÓN
+    </button>
+
+
+    <!-- ZONA DE PELIGRO -->
+
+    <div class="seccion peligro">
+
+        <div class="seccion-titulo">
+            ZONA DE SEGURIDAD
+        </div>
+
+        <button
+            class="eliminar"
+            id="eliminarCuenta"
+            type="button"
+        >
+            🗑️ ELIMINAR MI CUENTA
+        </button>
+
+    </div>
+
+</div>
+
+
+<div
+    class="mensaje"
+    id="mensaje"
+></div>
+
+
+<!-- SUPABASE -->
+
+<script
+src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+</script>
+
+
+<script>
+
+/* =========================
+   SUPABASE
+========================= */
+
+const SUPABASE_URL =
+    "https://mybctirrilqkucnkaztx.supabase.co/";
+
+const SUPABASE_KEY =
+    "sb_publishable_tDdp8eOCmHOJJIfVm2WdHA_M3Q962Mc";
+
+
+const supabaseClient =
+    supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+
+
+/* =========================
+   MENSAJES
+========================= */
+
+function mostrarMensaje(texto){
+
+    const mensaje =
+        document.getElementById(
+            "mensaje"
+        );
+
+
+    mensaje.textContent =
+        texto;
+
+
+    mensaje.classList.add(
+        "mostrar"
+    );
+
+
+    setTimeout(
+        function(){
+
+            mensaje.classList.remove(
+                "mostrar"
+            );
+
+        },
+        3000
+    );
+
+}
+
+
+/* =========================
+   USUARIO
+========================= */
+
+async function cargarUsuario(){
+
+
+    const {
+        data: { session }
+    } =
+        await supabaseClient.auth
+            .getSession();
+
+
+    if (!session){
+
+        window.location.replace(
+            "login.html"
+        );
+
+        return;
+
+    }
+
+
+    document.getElementById(
+        "correoUsuario"
+    ).textContent =
+        session.user.email ||
+        "Sin correo";
+
+}
+
+
+/* =========================
+   META MENSUAL
+========================= */
+
+const selectorMeta =
+    document.getElementById(
+        "metaMensual"
+    );
+
+
+let metaGuardada =
+    Number(
+        localStorage.getItem(
+            "metaMensualBasketballPassport"
+        )
+    );
+
+
+if (!metaGuardada){
+
+    metaGuardada = 10;
+
+}
+
+
+selectorMeta.value =
+    String(metaGuardada);
+
+
+selectorMeta.addEventListener(
+    "change",
+    function(){
+
+
+        localStorage.setItem(
+
+            "metaMensualBasketballPassport",
+
+            this.value
+
+        );
+
+
+        mostrarMensaje(
+            "🏆 Meta mensual actualizada"
+        );
+
+    }
+);
+
+
+/* =========================
+   CAMBIAR CONTRASEÑA
+========================= */
+
+document.getElementById(
+    "cambiarContrasena"
+).onclick =
+    async function(){
+
+
+        const {
+            data: { session }
+        } =
+            await supabaseClient.auth
+                .getSession();
+
+
+        if (
+            !session ||
+            !session.user.email
+        ){
+
+            mostrarMensaje(
+                "No encontramos el correo de la cuenta."
+            );
+
+            return;
+
+        }
+
+
+        const {
+            error
+        } =
+            await supabaseClient.auth
+                .resetPasswordForEmail(
+                    session.user.email,
+                    {
+                        redirectTo:
+                            window.location.origin +
+                            window.location.pathname
+                                .replace(
+                                    "configuracion.html",
+                                    "login.html"
+                                )
+                    }
+                );
+
+
+        if (error){
+
+            mostrarMensaje(
+                "No se pudo enviar el correo."
+            );
+
+            return;
+
+        }
+
+
+        mostrarMensaje(
+            "📩 Revisa tu correo para cambiar la contraseña."
+        );
+
+    };
+
+
+/* =========================
+   CERRAR SESIÓN
+========================= */
+
+document.getElementById(
+    "cerrarSesion"
+).onclick =
+    async function(){
+
+
+        await supabaseClient.auth
+            .signOut();
+
+
+        window.location.replace(
+            "login.html"
+        );
+
+    };
+
+
+/* =========================
+   ELIMINAR CUENTA
+========================= */
+
+document.getElementById(
+    "eliminarCuenta"
+).onclick =
+    function(){
+
+
+        alert(
+            "La eliminación definitiva de la cuenta estará disponible próximamente.\n\nPor seguridad, esta opción todavía no elimina ningún dato."
+        );
+
+    };
+
+
+/* =========================
+   INICIAR
+========================= */
+
+cargarUsuario();
+
+</script>
+
+</body>
+</html>
