@@ -121,10 +121,17 @@
         Guarda los recuerdos de esta cancha.
     </div>
 
-    <div class="foto">
-        📷
-        <span>Agregar foto</span>
-    </div>
+    <div class="foto" onclick="document.getElementById('fotoCancha').click()">
+    📷
+    <span>Agregar foto</span>
+</div>
+
+<input
+    type="file"
+    id="fotoCancha"
+    accept="image/*"
+    style="display:none;"
+>
 
     <label>Nombre de la cancha</label>
     <input
