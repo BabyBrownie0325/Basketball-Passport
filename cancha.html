@@ -226,7 +226,29 @@
     if (datosGuardados) {
         const datosCancha = JSON.parse(datosGuardados);
 
-        console.log("Datos de la cancha:", datosCancha);
+        document.getElementById("nombreCancha").textContent =
+            datosCancha.nombre + " 🏀";
+
+        document.getElementById("ubicacionCancha").textContent =
+            "📍 " + datosCancha.ubicacion;
+
+        document.getElementById("estrellasCancha").textContent =
+            "★".repeat(Number(datosCancha.estrellas));
+
+        document.getElementById("fechaCancha").textContent =
+            "📅 Visitada el " + datosCancha.fecha;
+
+        document.getElementById("partidosCancha").textContent =
+            datosCancha.partidos;
+
+        document.getElementById("victoriasCancha").textContent =
+            datosCancha.victorias;
+
+        document.getElementById("derrotasCancha").textContent =
+            datosCancha.derrotas;
+
+        document.getElementById("puntosCancha").textContent =
+            datosCancha.puntos;
     }
 </script>
 </body>
