@@ -307,81 +307,88 @@ const basketballIcon = L.divIcon({
 });
 
 
-/* CANCHA DE PRUEBA */
+/* =========================
+   CANCHAS GUARDADAS
+========================= */
 
-const canchaEjemplo = L.marker(
+let canchas = JSON.parse(localStorage.getItem("canchas")) || [];
 
-    [10.4806,-66.9036],
+/* Si todavía no existe ninguna cancha,
+   conservamos la cancha de prueba */
+if (canchas.length === 0) {
+    canchas.push({
+        id: Date.now(),
+        nombre: "Cancha de prueba",
+        ubicacion: "Caracas, Venezuela",
+        estrellas: 5,
+        lat: 10.4806,
+        lng: -66.9036
+    });
 
-    {
-        icon:basketballIcon
-    }
+    localStorage.setItem("canchas", JSON.stringify(canchas));
+}
 
-).addTo(map);
+/* Mostrar todas las canchas en el mapa */
+canchas.forEach(function(cancha) {
 
+    const marcador = L.marker(
+        [cancha.lat, cancha.lng],
+        { icon: basketballIcon }
+    ).addTo(map);
 
-/* INFORMACIÓN DE LA CANCHA */
-
-canchaEjemplo.bindPopup(`
-    <div style="
-        width: 210px;
-        font-family: Arial, sans-serif;
-    ">
-
+    marcador.bindPopup(`
         <div style="
-            height: 105px;
-            background: #eeeeee;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 42px;
-            margin-bottom: 10px;
+            width:210px;
+            font-family:Arial,sans-serif;
         ">
-            📷
+
+            <div style="
+                font-size:17px;
+                font-weight:bold;
+                margin-bottom:4px;
+            ">
+                ${cancha.nombre} 🏀
+            </div>
+
+            <div style="
+                font-size:13px;
+                color:#666;
+                margin-bottom:8px;
+            ">
+                📍 ${cancha.ubicacion}
+            </div>
+
+            <div style="
+                font-size:16px;
+                margin-bottom:10px;
+            ">
+                ${"★".repeat(Number(cancha.estrellas || 0))}
+            </div>
+
+            <button
+                onclick="abrirCancha('${cancha.id}')"
+                style="
+                    width:100%;
+                    border:none;
+                    border-radius:8px;
+                    padding:10px;
+                    background:#222;
+                    color:white;
+                    font-weight:bold;
+                    cursor:pointer;
+                "
+            >
+                VER CANCHA →
+            </button>
+
         </div>
+    `);
+});
 
-        <div style="
-            font-size: 17px;
-            font-weight: bold;
-            margin-bottom: 4px;
-        ">
-            Cancha de prueba 🏀
-        </div>
-
-        <div style="
-            font-size: 13px;
-            color: #666;
-            margin-bottom: 5px;
-        ">
-            📍 Caracas, Venezuela
-        </div>
-
-        <div style="
-            font-size: 16px;
-            margin-bottom: 10px;
-        ">
-            ⭐⭐⭐⭐⭐
-        </div>
-
-        <button
-            onclick="window.location.href='cancha.html'"
-            style="
-                width: 100%;
-                border: none;
-                border-radius: 8px;
-                padding: 10px;
-                background: #222;
-                color: white;
-                font-weight: bold;
-                cursor: pointer;
-            "
-        >
-            VER CANCHA →
-        </button>
-
-    </div>
-`);
+function abrirCancha(id) {
+    localStorage.setItem("canchaSeleccionada", id);
+    window.location.href = "cancha.html";
+}
 
 /* =========================
    MENU
