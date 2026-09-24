@@ -82,7 +82,7 @@
             object-fit: cover;
         }
 
-        /* UBICACIÓN DEL MAPA */
+        /* UBICACIÓN */
 
         .ubicacion-confirmada {
             background: #eeeeee;
@@ -128,7 +128,7 @@
             gap: 14px;
         }
 
-        /* BOTÓN GUARDAR */
+        /* GUARDAR */
 
         .guardar {
             width: 100%;
@@ -149,22 +149,16 @@
         }
 
         @media (max-width: 500px) {
-
             h1 {
                 font-size: 34px;
             }
-
         }
-
     </style>
 </head>
-
 
 <body>
 
 <div class="pagina">
-
-    <!-- VOLVER -->
 
     <button
         class="volver"
@@ -173,26 +167,22 @@
         ←
     </button>
 
-
     <h1>Nueva cancha 🏀</h1>
 
     <div class="subtitulo">
         Agrega un nuevo lugar a tu Basketball Passport.
     </div>
 
-
     <!-- FOTO -->
 
     <div
         class="foto"
         id="vistaFoto"
-        onclick="document.getElementById('fotoCancha').click()"
-    >
+        onclick="document.getElementById('fotoCancha').click()">
 
         <img
             id="previewFoto"
-            alt="Foto de la cancha"
-        >
+            alt="Foto de la cancha">
 
         <div id="textoFoto">
             📷
@@ -201,14 +191,11 @@
 
     </div>
 
-
     <input
         type="file"
         id="fotoCancha"
         accept="image/*"
-        style="display:none;"
-    >
-
+        style="display:none;">
 
     <!-- UBICACIÓN SELECCIONADA -->
 
@@ -218,85 +205,44 @@
         📍 Ubicación seleccionada en el mapa
     </div>
 
-
-    <!-- NOMBRE -->
-
     <div class="campo">
-
-        <label>
-            Nombre de la cancha
-        </label>
+        <label>Nombre de la cancha</label>
 
         <input
             id="nombre"
             type="text"
-            placeholder="Ej. Cancha Los Próceres"
-        >
-
+            placeholder="Ej. Cancha Los Próceres">
     </div>
 
-
-    <!-- UBICACIÓN -->
-
     <div class="campo">
-
-        <label>
-            Ubicación
-        </label>
+        <label>Ubicación</label>
 
         <input
             id="ubicacion"
             type="text"
-            placeholder="Ej. Caracas, Venezuela"
-        >
-
+            placeholder="Ej. Caracas, Venezuela">
     </div>
 
-
-    <!-- CALIFICACIÓN -->
-
     <div class="campo">
-
-        <label>
-            Calificación
-        </label>
+        <label>Calificación</label>
 
         <select id="estrellas">
-
             <option value="5">⭐⭐⭐⭐⭐</option>
             <option value="4">⭐⭐⭐⭐</option>
             <option value="3">⭐⭐⭐</option>
             <option value="2">⭐⭐</option>
             <option value="1">⭐</option>
-
         </select>
-
     </div>
 
-
-    <!-- FECHA -->
+    <div class="campo">
+        <label>Fecha de visita</label>
+        <input id="fecha" type="date">
+    </div>
 
     <div class="campo">
 
-        <label>
-            Fecha de visita
-        </label>
-
-        <input
-            id="fecha"
-            type="date"
-        >
-
-    </div>
-
-
-    <!-- PARTIDOS -->
-
-    <div class="campo">
-
-        <label>
-            Mis partidos
-        </label>
+        <label>Mis partidos</label>
 
         <div class="fila">
 
@@ -304,58 +250,43 @@
                 id="partidos"
                 type="number"
                 min="0"
-                placeholder="Partidos"
-            >
+                placeholder="Partidos">
 
             <input
                 id="victorias"
                 type="number"
                 min="0"
-                placeholder="Victorias"
-            >
+                placeholder="Victorias">
 
             <input
                 id="derrotas"
                 type="number"
                 min="0"
-                placeholder="Derrotas"
-            >
+                placeholder="Derrotas">
 
             <input
                 id="puntos"
                 type="number"
                 min="0"
-                placeholder="Puntos"
-            >
+                placeholder="Puntos">
 
         </div>
-
     </div>
-
-
-    <!-- RECUERDO -->
 
     <div class="campo">
 
-        <label>
-            Mi recuerdo
-        </label>
+        <label>Mi recuerdo</label>
 
         <textarea
             id="recuerdo"
-            placeholder="¿Qué recuerdas de esta cancha?"
-        ></textarea>
+            placeholder="¿Qué recuerdas de esta cancha?"></textarea>
 
     </div>
-
-
-    <!-- GUARDAR -->
 
     <button
         class="guardar"
         id="guardarCancha"
-        type="button"
-    >
+        type="button">
         GUARDAR EN MI PASAPORTE
     </button>
 
@@ -365,7 +296,6 @@
 <!-- SUPABASE -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 
 <script>
 
@@ -379,12 +309,34 @@ const SUPABASE_URL =
 const SUPABASE_KEY =
     "sb_publishable_tDdp8eOCmHOJJIfVm2WdHA_M3Q962Mc";
 
-
 const supabaseClient =
     supabase.createClient(
         SUPABASE_URL,
         SUPABASE_KEY
     );
+
+
+/* =========================
+   COMPROBAR SESIÓN
+========================= */
+
+async function comprobarSesion() {
+
+    const {
+        data: { session }
+    } = await supabaseClient.auth.getSession();
+
+    if (!session) {
+
+        window.location.replace(
+            "login.html"
+        );
+
+    }
+
+}
+
+comprobarSesion();
 
 
 /* =========================
@@ -396,9 +348,7 @@ const ubicacionTemporal =
         "nuevaCanchaUbicacion"
     );
 
-
 let coordenadas = null;
-
 
 if (ubicacionTemporal) {
 
@@ -416,10 +366,6 @@ if (ubicacionTemporal) {
     }
 
 }
-
-
-/* Si se entra directamente sin elegir
-   una ubicación en el mapa */
 
 if (
     !coordenadas ||
@@ -439,10 +385,19 @@ if (
 
 
 /* =========================
-   FOTO
+   FOTO PRIVADA
 ========================= */
 
-let urlFoto = "";
+/*
+   Ya NO guardaremos una URL pública.
+
+   Guardaremos el nombre/ruta real del archivo
+   dentro del bucket privado fotos-canchas.
+*/
+
+let fotoPath = "";
+
+let subiendoFoto = false;
 
 
 document.getElementById(
@@ -451,50 +406,52 @@ document.getElementById(
     "change",
     async function() {
 
-
         const archivo =
             this.files[0];
-
 
         if (!archivo) {
             return;
         }
 
 
-        /* MOSTRAR VISTA PREVIA */
+        /* VISTA PREVIA LOCAL */
 
         const previewFoto =
             document.getElementById(
                 "previewFoto"
             );
 
-
         const textoFoto =
             document.getElementById(
                 "textoFoto"
             );
-
 
         previewFoto.src =
             URL.createObjectURL(
                 archivo
             );
 
-
         previewFoto.style.display =
             "block";
-
 
         textoFoto.style.display =
             "none";
 
 
-        /* SUBIR FOTO A SUPABASE */
+        /* SUBIR A SUPABASE */
+
+        subiendoFoto = true;
+
+        const nombreSeguro =
+            archivo.name.replace(
+                /[^a-zA-Z0-9._-]/g,
+                "_"
+            );
 
         const nombreArchivo =
             Date.now() +
             "-" +
-            archivo.name;
+            nombreSeguro;
 
 
         const {
@@ -502,26 +459,19 @@ document.getElementById(
             error
         } =
             await supabaseClient.storage
-
                 .from("fotos-canchas")
-
                 .upload(
                     nombreArchivo,
                     archivo
                 );
 
 
+        subiendoFoto = false;
+
+
         if (error) {
 
-            alert(
-                "No se pudo subir la foto: " +
-                error.message
-            );
-
-            /*
-               Volvemos a mostrar la pestaña
-               si la subida falla.
-            */
+            fotoPath = "";
 
             previewFoto.style.display =
                 "none";
@@ -529,27 +479,25 @@ document.getElementById(
             textoFoto.style.display =
                 "flex";
 
+            alert(
+                "No se pudo subir la foto: " +
+                error.message
+            );
+
             return;
 
         }
 
 
-        /* OBTENER URL PÚBLICA */
+        /*
+           data.path es lo importante.
 
-        const {
-            data: urlData
-        } =
-            supabaseClient.storage
+           Ejemplo:
+           1790217071152-foto.jpg
+        */
 
-                .from("fotos-canchas")
-
-                .getPublicUrl(
-                    nombreArchivo
-                );
-
-
-        urlFoto =
-            urlData.publicUrl;
+        fotoPath =
+            data.path;
 
 
         alert(
@@ -574,6 +522,17 @@ const botonGuardar =
 botonGuardar.addEventListener(
     "click",
     function() {
+
+
+        if (subiendoFoto) {
+
+            alert(
+                "Espera un momento, la foto todavía se está subiendo. 📷"
+            );
+
+            return;
+
+        }
 
 
         const nombre =
@@ -616,8 +575,6 @@ botonGuardar.addEventListener(
 
         }
 
-
-        /* CREAR NUEVA CANCHA */
 
         const nuevaCancha = {
 
@@ -685,15 +642,22 @@ botonGuardar.addEventListener(
                     "recuerdo"
                 ).value.trim(),
 
+
+            /*
+               Dejamos foto por compatibilidad
+               con las canchas antiguas.
+
+               Las nuevas usarán fotoPath.
+            */
+
             foto:
-                urlFoto
+                "",
+
+            fotoPath:
+                fotoPath
 
         };
 
-
-        /* =========================
-           CANCHAS EXISTENTES
-        ========================= */
 
         let canchas =
             JSON.parse(
@@ -708,8 +672,6 @@ botonGuardar.addEventListener(
         );
 
 
-        /* GUARDAR */
-
         localStorage.setItem(
 
             "canchasBasketballPassport",
@@ -721,14 +683,10 @@ botonGuardar.addEventListener(
         );
 
 
-        /* LIMPIAR UBICACIÓN TEMPORAL */
-
         localStorage.removeItem(
             "nuevaCanchaUbicacion"
         );
 
-
-        /* DEJAR NUEVA CANCHA SELECCIONADA */
 
         localStorage.setItem(
             "canchaSeleccionada",
