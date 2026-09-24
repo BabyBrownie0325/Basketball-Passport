@@ -36,6 +36,18 @@
             justify-content: center;
             font-size: 65px;
             position: relative;
+            overflow: hidden;
+        }
+
+        .foto-placeholder {
+            font-size: 65px;
+        }
+
+        #fotoCanchaGuardada {
+            display: none;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .volver {
@@ -49,6 +61,7 @@
             background: rgba(255,255,255,0.92);
             font-size: 24px;
             cursor: pointer;
+            z-index: 10;
         }
 
         /* INFORMACIÓN */
@@ -110,6 +123,8 @@
         }
 
         .etiqueta {
+            display: block;
+            margin-top: 4px;
             font-size: 13px;
             color: #666;
         }
@@ -124,7 +139,7 @@
             margin-bottom: 25px;
         }
 
-        /* BOTÓN */
+        /* BOTONES */
 
         .editar {
             width: 100%;
@@ -134,6 +149,19 @@
             background: #222;
             color: white;
             font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .eliminar {
+            width: 100%;
+            border: 1px solid #d7d7d7;
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 12px;
+            background: white;
+            color: #b42318;
+            font-size: 15px;
             font-weight: bold;
             cursor: pointer;
         }
@@ -149,37 +177,50 @@
 
     <div class="foto-cancha">
 
-        <button class="volver"
-                onclick="window.location.href='mapa.html'">
+        <button
+            class="volver"
+            onclick="window.location.href='mapa.html'">
             ←
         </button>
 
-    <img id="fotoCanchaGuardada"
-         style="display:none; width:100%; height:100%; object-fit:cover;">
+        <div
+            class="foto-placeholder"
+            id="fotoPlaceholder">
+            🏀
+        </div>
 
-</div>
+        <img
+            id="fotoCanchaGuardada"
+            alt="Foto de la cancha">
 
     </div>
 
 
     <div class="contenido">
 
-        <div class="titulo" id="nombreCancha">
-    Cancha de prueba 🏀
-</div>
+        <div
+            class="titulo"
+            id="nombreCancha">
+            Cancha 🏀
+        </div>
 
-        <div class="ubicacion" id="ubicacionCancha">
-    📍 Caracas, Venezuela
-</div>
+        <div
+            class="ubicacion"
+            id="ubicacionCancha">
+            📍 Ubicación
+        </div>
 
-        <div class="estrellas" id="estrellasCancha">
-    ★★★★★
-</div>
+        <div
+            class="estrellas"
+            id="estrellasCancha">
+        </div>
 
 
-        <div class="fecha" id="fechaCancha">
-    📅 Visitada el 23 de septiembre de 2026
-</div>
+        <div
+            class="fecha"
+            id="fechaCancha">
+            📅 Sin fecha registrada
+        </div>
 
 
         <div class="titulo-seccion">
@@ -189,19 +230,43 @@
         <div class="estadisticas">
 
             <div class="estadistica">
-                <span class="numero" id="partidosCancha">12</span>
+                <span
+                    class="numero"
+                    id="partidosCancha">0</span>
+
+                <span class="etiqueta">
+                    Partidos
+                </span>
             </div>
 
             <div class="estadistica">
-               <span class="numero" id="victoriasCancha">8</span>
+                <span
+                    class="numero"
+                    id="victoriasCancha">0</span>
+
+                <span class="etiqueta">
+                    Victorias
+                </span>
             </div>
 
             <div class="estadistica">
-               <span class="numero" id="derrotasCancha">4</span>
+                <span
+                    class="numero"
+                    id="derrotasCancha">0</span>
+
+                <span class="etiqueta">
+                    Derrotas
+                </span>
             </div>
 
             <div class="estadistica">
-                <span class="numero" id="puntosCancha">96</span>
+                <span
+                    class="numero"
+                    id="puntosCancha">0</span>
+
+                <span class="etiqueta">
+                    Puntos
+                </span>
             </div>
 
         </div>
@@ -211,62 +276,231 @@
             Mi recuerdo
         </div>
 
-        <div class="comentario" id="recuerdoCancha">
-    Gran cancha. Uno de mis lugares favoritos para jugar con los panas. 🏀
-</div>
+        <div
+            class="comentario"
+            id="recuerdoCancha">
+            Sin recuerdos registrados todavía.
+        </div>
 
 
-        <button class="editar" onclick="window.location.href='editar-cancha.html'">
-    EDITAR CANCHA
-</button>
+        <button
+            class="editar"
+            id="editarCancha">
+            EDITAR CANCHA
+        </button>
+
+
+        <button
+            class="eliminar"
+            id="eliminarCancha">
+            🗑️ ELIMINAR CANCHA
+        </button>
 
     </div>
 
 </div>
+
+
 <script>
-   const datosGuardados = localStorage.getItem("canchaEjemplo");
 
-if (datosGuardados) {
-    const datosCancha = JSON.parse(datosGuardados);
+/* =========================
+   BUSCAR CANCHA SELECCIONADA
+========================= */
 
-    document.getElementById("recuerdoCancha").textContent =
-        datosCancha.recuerdo;
-}
+const canchaSeleccionada =
+    localStorage.getItem("canchaSeleccionada");
 
-        document.getElementById("nombreCancha").textContent =
-            datosCancha.nombre + " 🏀";
+const canchas =
+    JSON.parse(
+        localStorage.getItem(
+            "canchasBasketballPassport"
+        )
+    ) || [];
 
-        document.getElementById("ubicacionCancha").textContent =
-            "📍 " + datosCancha.ubicacion;
 
-        document.getElementById("estrellasCancha").textContent =
-            "★".repeat(Number(datosCancha.estrellas));
+/* Buscar por ID */
 
-        document.getElementById("fechaCancha").textContent =
-            "📅 Visitada el " + datosCancha.fecha;
+const datosCancha =
+    canchas.find(function(cancha) {
 
-        document.getElementById("partidosCancha").textContent =
-            datosCancha.partidos;
+        return String(cancha.id) ===
+               String(canchaSeleccionada);
 
-        document.getElementById("victoriasCancha").textContent =
-            datosCancha.victorias;
+    });
 
-        document.getElementById("derrotasCancha").textContent =
-            datosCancha.derrotas;
 
-        document.getElementById("puntosCancha").textContent =
-            datosCancha.puntos;
+/* =========================
+   MOSTRAR INFORMACIÓN
+========================= */
+
+if (datosCancha) {
+
+    document.getElementById(
+        "nombreCancha"
+    ).textContent =
+        (datosCancha.nombre || "Cancha") +
+        " 🏀";
+
+
+    document.getElementById(
+        "ubicacionCancha"
+    ).textContent =
+        "📍 " +
+        (datosCancha.ubicacion ||
+        "Ubicación no registrada");
+
+
+    document.getElementById(
+        "estrellasCancha"
+    ).textContent =
+        "★".repeat(
+            Number(datosCancha.estrellas || 0)
+        );
+
+
+    if (datosCancha.fecha) {
+
+        document.getElementById(
+            "fechaCancha"
+        ).textContent =
+            "📅 Visitada el " +
+            datosCancha.fecha;
+
     }
-   if (datosGuardados) {
-    const datosCancha = JSON.parse(datosGuardados);
+
+
+    document.getElementById(
+        "partidosCancha"
+    ).textContent =
+        datosCancha.partidos || 0;
+
+
+    document.getElementById(
+        "victoriasCancha"
+    ).textContent =
+        datosCancha.victorias || 0;
+
+
+    document.getElementById(
+        "derrotasCancha"
+    ).textContent =
+        datosCancha.derrotas || 0;
+
+
+    document.getElementById(
+        "puntosCancha"
+    ).textContent =
+        datosCancha.puntos || 0;
+
+
+    if (datosCancha.recuerdo) {
+
+        document.getElementById(
+            "recuerdoCancha"
+        ).textContent =
+            datosCancha.recuerdo;
+
+    }
+
+
+    /* FOTO */
 
     if (datosCancha.foto) {
-        const imagenCancha = document.getElementById("fotoCanchaGuardada");
-        imagenCancha.src = datosCancha.foto;
-        imagenCancha.style.display = "block";
+
+        const imagen =
+            document.getElementById(
+                "fotoCanchaGuardada"
+            );
+
+        imagen.src =
+            datosCancha.foto;
+
+        imagen.style.display =
+            "block";
+
+        document.getElementById(
+            "fotoPlaceholder"
+        ).style.display =
+            "none";
+
     }
+
 }
-    
+
+
+/* =========================
+   EDITAR CANCHA
+========================= */
+
+document.getElementById(
+    "editarCancha"
+).onclick = function() {
+
+    if (!datosCancha) {
+        return;
+    }
+
+    localStorage.setItem(
+        "canchaSeleccionada",
+        datosCancha.id
+    );
+
+    window.location.href =
+        "editar-cancha.html";
+
+};
+
+
+/* =========================
+   ELIMINAR CANCHA
+========================= */
+
+document.getElementById(
+    "eliminarCancha"
+).onclick = function() {
+
+    if (!datosCancha) {
+        return;
+    }
+
+
+    const confirmar =
+        window.confirm(
+            "¿Seguro que quieres eliminar esta cancha?\n\nEsta acción no se puede deshacer."
+        );
+
+
+    if (!confirmar) {
+        return;
+    }
+
+
+    const nuevasCanchas =
+        canchas.filter(function(cancha) {
+
+            return String(cancha.id) !==
+                   String(datosCancha.id);
+
+        });
+
+
+    localStorage.setItem(
+        "canchasBasketballPassport",
+        JSON.stringify(nuevasCanchas)
+    );
+
+
+    localStorage.removeItem(
+        "canchaSeleccionada"
+    );
+
+
+    window.location.href =
+        "mapa.html";
+
+};
+
 </script>
+
 </body>
 </html>
