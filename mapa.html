@@ -213,11 +213,10 @@ html, body{
     </a>
 
 
-    <a class="menu-item" href="agregar-cancha.html">
-        <span class="menu-icon">➕</span>
-        Agregar cancha
-    </a>
-
+    <a class="menu-item" href="#" id="agregarCancha">
+    <span class="menu-icon">➕</span>
+    Agregar cancha
+</a>
 
     <a class="menu-item" href="#">
         <span class="menu-icon">⚙️</span>
@@ -417,7 +416,40 @@ overlay.onclick = function () {
     overlay.classList.remove("show");
 };
 
+/* =========================
+   AGREGAR CANCHA MANUALMENTE
+========================= */
 
+const agregarCancha = document.getElementById("agregarCancha");
+
+agregarCancha.onclick = function (event) {
+    event.preventDefault();
+
+    // Cerrar menú
+    sideMenu.classList.remove("open");
+    overlay.classList.remove("show");
+
+    // Avisar al usuario
+    alert("📍 Busca la cancha en el mapa y toca su ubicación exacta.");
+
+    // Esperar un toque en el mapa
+    map.once("click", function(e) {
+
+        const latitud = e.latlng.lat;
+        const longitud = e.latlng.lng;
+
+        // Colocar balón temporal
+        const marcadorTemporal = L.marker(
+            [latitud, longitud],
+            { icon: basketballIcon, draggable: true }
+        ).addTo(map);
+
+        marcadorTemporal.bindPopup(
+            "🏀 Ubicación de la nueva cancha"
+        ).openPopup();
+
+    });
+};
 </script>
 <!-- PROTEGER PASAPORTE CON SUPABASE -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
