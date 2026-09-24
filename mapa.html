@@ -323,23 +323,65 @@ const canchaEjemplo = L.marker(
 /* INFORMACIÓN DE LA CANCHA */
 
 canchaEjemplo.bindPopup(`
+    <div style="
+        width: 210px;
+        font-family: Arial, sans-serif;
+    ">
 
-    <b>Cancha de prueba 🏀</b>
+        <div style="
+            height: 105px;
+            background: #eeeeee;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 42px;
+            margin-bottom: 10px;
+        ">
+            📷
+        </div>
 
-    <br><br>
+        <div style="
+            font-size: 17px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        ">
+            Cancha de prueba 🏀
+        </div>
 
-    📍 Caracas, Venezuela
+        <div style="
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 5px;
+        ">
+            📍 Caracas, Venezuela
+        </div>
 
-    <br>
+        <div style="
+            font-size: 16px;
+            margin-bottom: 10px;
+        ">
+            ⭐⭐⭐⭐⭐
+        </div>
 
-    ⭐⭐⭐⭐⭐
+        <button
+            onclick="alert('Próximamente abriremos la ficha de esta cancha 🏀')"
+            style="
+                width: 100%;
+                border: none;
+                border-radius: 8px;
+                padding: 10px;
+                background: #222;
+                color: white;
+                font-weight: bold;
+                cursor: pointer;
+            "
+        >
+            VER CANCHA →
+        </button>
 
-    <br><br>
-
-    Aquí aparecerán tus recuerdos.
-
+    </div>
 `);
-
 
 /* =========================
    MENU
