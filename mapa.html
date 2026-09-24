@@ -444,9 +444,34 @@ agregarCancha.onclick = function (event) {
             { icon: basketballIcon, draggable: true }
         ).addTo(map);
 
-        marcadorTemporal.bindPopup(
-            "🏀 Ubicación de la nueva cancha"
-        ).openPopup();
+        marcadorTemporal.bindPopup(`
+    <div style="text-align:center;">
+        <strong>🏀 Nueva cancha</strong>
+        <br><br>
+
+        <button
+            onclick="map.removeLayer(this._marcador)"
+            style="
+                border:none;
+                padding:8px 14px;
+                border-radius:8px;
+                background:#222;
+                color:white;
+                cursor:pointer;
+            "
+        >
+            ✕ Quitar balón
+        </button>
+    </div>
+`).openPopup();
+
+/* Guardamos referencia para poder eliminarlo */
+const botonQuitar = marcadorTemporal
+    .getPopup()
+    .getElement()
+    .querySelector("button");
+
+botonQuitar._marcador = marcadorTemporal;
 
     });
 };
