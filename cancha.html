@@ -257,13 +257,14 @@ if (datosGuardados) {
         document.getElementById("puntosCancha").textContent =
             datosCancha.puntos;
     }
-    const fotoGuardada = localStorage.getItem("fotoCanchaEjemplo");
+   if (datosGuardados) {
+    const datosCancha = JSON.parse(datosGuardados);
 
-if (fotoGuardada) {
-    const imagenCancha = document.getElementById("fotoCanchaGuardada");
-
-    imagenCancha.src = fotoGuardada;
-    imagenCancha.style.display = "block";
+    if (datosCancha.foto) {
+        const imagenCancha = document.getElementById("fotoCanchaGuardada");
+        imagenCancha.src = datosCancha.foto;
+        imagenCancha.style.display = "block";
+    }
 }
     
 </script>
