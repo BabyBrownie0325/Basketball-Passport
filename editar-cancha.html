@@ -121,9 +121,12 @@
         Guarda los recuerdos de esta cancha.
     </div>
 
-    <div class="foto" onclick="document.getElementById('fotoCancha').click()">
-    📷
-    <span>Agregar foto</span>
+    <div class="foto" id="vistaFoto" onclick="document.getElementById('fotoCancha').click()">
+    <img id="previewFoto" style="display:none;">
+    <div id="textoFoto">
+        📷
+        <span>Agregar foto</span>
+    </div>
 </div>
 
 <input
