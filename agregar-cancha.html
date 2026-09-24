@@ -46,6 +46,17 @@
             margin-bottom: 32px;
         }
 
+        /* UBICACIÓN CONFIRMADA */
+
+        .ubicacion-confirmada {
+            background: #eeeeee;
+            border-radius: 14px;
+            padding: 12px 15px;
+            margin-bottom: 25px;
+            font-size: 14px;
+            color: #555;
+        }
+
         .campo {
             margin-bottom: 22px;
         }
@@ -93,21 +104,26 @@
         }
 
         @media (max-width: 500px) {
+
             h1 {
                 font-size: 34px;
             }
+
         }
     </style>
 </head>
+
 
 <body>
 
 <div class="pagina">
 
-    <button class="volver"
-            onclick="window.location.href='mapa.html'">
+    <button
+        class="volver"
+        onclick="window.location.href='mapa.html'">
         ←
     </button>
+
 
     <h1>Nueva cancha 🏀</h1>
 
@@ -115,72 +131,159 @@
         Agrega un nuevo lugar a tu Basketball Passport.
     </div>
 
-    <div class="campo">
-        <label>Nombre de la cancha</label>
-        <input id="nombre"
-               type="text"
-               placeholder="Ej. Cancha Los Próceres">
+
+    <div
+        class="ubicacion-confirmada"
+        id="ubicacionConfirmada">
+        📍 Ubicación seleccionada en el mapa
     </div>
 
-    <div class="campo">
-        <label>Ubicación</label>
-        <input id="ubicacion"
-               type="text"
-               placeholder="Ej. Caracas, Venezuela">
-    </div>
+
+    <!-- NOMBRE -->
 
     <div class="campo">
-        <label>Calificación</label>
+
+        <label>
+            Nombre de la cancha
+        </label>
+
+        <input
+            id="nombre"
+            type="text"
+            placeholder="Ej. Cancha Los Próceres">
+
+    </div>
+
+
+    <!-- UBICACIÓN -->
+
+    <div class="campo">
+
+        <label>
+            Ubicación
+        </label>
+
+        <input
+            id="ubicacion"
+            type="text"
+            placeholder="Ej. Caracas, Venezuela">
+
+    </div>
+
+
+    <!-- CALIFICACIÓN -->
+
+    <div class="campo">
+
+        <label>
+            Calificación
+        </label>
 
         <select id="estrellas">
-            <option value="5">⭐⭐⭐⭐⭐</option>
-            <option value="4">⭐⭐⭐⭐</option>
-            <option value="3">⭐⭐⭐</option>
-            <option value="2">⭐⭐</option>
-            <option value="1">⭐</option>
+
+            <option value="5">
+                ⭐⭐⭐⭐⭐
+            </option>
+
+            <option value="4">
+                ⭐⭐⭐⭐
+            </option>
+
+            <option value="3">
+                ⭐⭐⭐
+            </option>
+
+            <option value="2">
+                ⭐⭐
+            </option>
+
+            <option value="1">
+                ⭐
+            </option>
+
         </select>
+
     </div>
 
-    <div class="campo">
-        <label>Fecha de visita</label>
-        <input id="fecha" type="date">
-    </div>
+
+    <!-- FECHA -->
 
     <div class="campo">
-        <label>Mis partidos</label>
+
+        <label>
+            Fecha de visita
+        </label>
+
+        <input
+            id="fecha"
+            type="date">
+
+    </div>
+
+
+    <!-- PARTIDOS -->
+
+    <div class="campo">
+
+        <label>
+            Mis partidos
+        </label>
 
         <div class="fila">
-            <input id="partidos"
-                   type="number"
-                   min="0"
-                   placeholder="Partidos">
 
-            <input id="victorias"
-                   type="number"
-                   min="0"
-                   placeholder="Victorias">
+            <input
+                id="partidos"
+                type="number"
+                min="0"
+                placeholder="Partidos">
 
-            <input id="derrotas"
-                   type="number"
-                   min="0"
-                   placeholder="Derrotas">
+            <input
+                id="victorias"
+                type="number"
+                min="0"
+                placeholder="Victorias">
 
-            <input id="puntos"
-                   type="number"
-                   min="0"
-                   placeholder="Puntos">
+            <input
+                id="derrotas"
+                type="number"
+                min="0"
+                placeholder="Derrotas">
+
+            <input
+                id="puntos"
+                type="number"
+                min="0"
+                placeholder="Puntos">
+
         </div>
+
     </div>
+
+
+    <!-- RECUERDO -->
 
     <div class="campo">
-        <label>Mi recuerdo</label>
 
-        <textarea id="recuerdo"
-                  placeholder="¿Qué recuerdas de esta cancha?"></textarea>
+        <label>
+            Mi recuerdo
+        </label>
+
+        <textarea
+            id="recuerdo"
+            placeholder="¿Qué recuerdas de esta cancha?"></textarea>
+
     </div>
 
-    <button class="guardar" id="guardarCancha">
+
+    <!-- GUARDAR -->
+
+    <button
+        class="guardar"
+        id="guardarCancha"
+        type="button">
+
         GUARDAR EN MI PASAPORTE
+
     </button>
 
 </div>
@@ -188,80 +291,241 @@
 
 <script>
 
-const botonGuardar = document.getElementById("guardarCancha");
+/* =========================
+   UBICACIÓN ELEGIDA EN MAPA
+========================= */
 
-botonGuardar.addEventListener("click", async function () {
-
-    const nombre = document.getElementById("nombre").value.trim();
-    const ubicacion = document.getElementById("ubicacion").value.trim();
-
-    if (!nombre || !ubicacion) {
-        alert("Escribe el nombre y la ubicación de la cancha.");
-        return;
-    }
-    
-    const respuesta = await fetch(
-    "https://nominatim.openstreetmap.org/search?format=json&limit=1&q=" +
-    encodeURIComponent(ubicacion)
-);
-
-const resultados = await respuesta.json();
-
-if (resultados.length === 0) {
-    alert("No pude encontrar esa ubicación. Intenta escribirla con más detalle, por ejemplo: Caracas, Venezuela.");
-    return;
-}
-
-const latitud = parseFloat(resultados[0].lat);
-const longitud = parseFloat(resultados[0].lon);
-
-    const nuevaCancha = {
-
-        id: Date.now(),
-
-        nombre: nombre,
-
-        ubicacion: ubicacion,
-        latitud: latitud,
-longitud: longitud,
-
-        estrellas: document.getElementById("estrellas").value,
-
-        fecha: document.getElementById("fecha").value,
-
-        partidos: document.getElementById("partidos").value || "0",
-
-        victorias: document.getElementById("victorias").value || "0",
-
-        derrotas: document.getElementById("derrotas").value || "0",
-
-        puntos: document.getElementById("puntos").value || "0",
-
-        recuerdo: document.getElementById("recuerdo").value,
-
-        foto: ""
-    };
-
-
-    let canchas = JSON.parse(
-        localStorage.getItem("canchasBasketballPassport")
-    ) || [];
-
-
-    canchas.push(nuevaCancha);
-
-
-    localStorage.setItem(
-        "canchasBasketballPassport",
-        JSON.stringify(canchas)
+const ubicacionTemporal =
+    localStorage.getItem(
+        "nuevaCanchaUbicacion"
     );
 
 
-    alert("¡Cancha agregada a tu pasaporte! 🏀");
+let coordenadas = null;
 
-    window.location.href = "mapa.html";
 
-});
+if (ubicacionTemporal) {
+
+    try {
+
+        coordenadas =
+            JSON.parse(
+                ubicacionTemporal
+            );
+
+    } catch(error) {
+
+        coordenadas = null;
+
+    }
+
+}
+
+
+/* Si alguien entra directamente al formulario
+   sin elegir primero un punto del mapa */
+
+if (
+    !coordenadas ||
+    coordenadas.latitud == null ||
+    coordenadas.longitud == null
+) {
+
+    alert(
+        "Primero selecciona la ubicación de la cancha en el mapa. 🏀"
+    );
+
+    window.location.replace(
+        "mapa.html"
+    );
+
+}
+
+
+/* =========================
+   GUARDAR CANCHA
+========================= */
+
+const botonGuardar =
+    document.getElementById(
+        "guardarCancha"
+    );
+
+
+botonGuardar.addEventListener(
+    "click",
+    function() {
+
+
+        const nombre =
+            document.getElementById(
+                "nombre"
+            ).value.trim();
+
+
+        const ubicacion =
+            document.getElementById(
+                "ubicacion"
+            ).value.trim();
+
+
+        if (!nombre || !ubicacion) {
+
+            alert(
+                "Escribe el nombre y la ubicación de la cancha."
+            );
+
+            return;
+
+        }
+
+
+        /* Crear cancha */
+
+        const nuevaCancha = {
+
+            id:
+                Date.now(),
+
+            nombre:
+                nombre,
+
+            ubicacion:
+                ubicacion,
+
+            /*
+               Estas coordenadas vienen
+               DIRECTAMENTE del balón
+               colocado en el mapa.
+            */
+
+            latitud:
+                Number(
+                    coordenadas.latitud
+                ),
+
+            longitud:
+                Number(
+                    coordenadas.longitud
+                ),
+
+            estrellas:
+                Number(
+                    document.getElementById(
+                        "estrellas"
+                    ).value
+                ),
+
+            fecha:
+                document.getElementById(
+                    "fecha"
+                ).value,
+
+            partidos:
+                Number(
+                    document.getElementById(
+                        "partidos"
+                    ).value || 0
+                ),
+
+            victorias:
+                Number(
+                    document.getElementById(
+                        "victorias"
+                    ).value || 0
+                ),
+
+            derrotas:
+                Number(
+                    document.getElementById(
+                        "derrotas"
+                    ).value || 0
+                ),
+
+            puntos:
+                Number(
+                    document.getElementById(
+                        "puntos"
+                    ).value || 0
+                ),
+
+            recuerdo:
+                document.getElementById(
+                    "recuerdo"
+                ).value.trim(),
+
+            foto:
+                ""
+
+        };
+
+
+        /* =========================
+           OBTENER CANCHAS EXISTENTES
+        ========================= */
+
+        let canchas =
+            JSON.parse(
+                localStorage.getItem(
+                    "canchasBasketballPassport"
+                )
+            ) || [];
+
+
+        /* Agregar nueva cancha */
+
+        canchas.push(
+            nuevaCancha
+        );
+
+
+        /* Guardar */
+
+        localStorage.setItem(
+
+            "canchasBasketballPassport",
+
+            JSON.stringify(
+                canchas
+            )
+
+        );
+
+
+        /*
+           Ya no necesitamos la ubicación
+           temporal porque la cancha fue creada.
+        */
+
+        localStorage.removeItem(
+            "nuevaCanchaUbicacion"
+        );
+
+
+        /*
+           Dejamos esta cancha seleccionada
+           por si luego queremos abrirla.
+        */
+
+        localStorage.setItem(
+            "canchaSeleccionada",
+            nuevaCancha.id
+        );
+
+
+        alert(
+            "¡Cancha agregada a tu pasaporte! 🏀"
+        );
+
+
+        /* Volver al mapa */
+
+        window.location.href =
+            "mapa.html";
+
+    }
+
+);
 
 </script>
 
