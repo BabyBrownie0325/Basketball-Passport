@@ -257,6 +257,15 @@ if (datosGuardados) {
         document.getElementById("puntosCancha").textContent =
             datosCancha.puntos;
     }
+    const fotoGuardada = localStorage.getItem("fotoCanchaEjemplo");
+
+if (fotoGuardada) {
+    const imagenCancha = document.getElementById("fotoCanchaGuardada");
+
+    imagenCancha.src = fotoGuardada;
+    imagenCancha.style.display = "block";
+}
+    
 </script>
 </body>
 </html>
