@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Mis estadísticas | Basketball Passport</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+    background:#f5f5f5;
+    color:#222;
+}
+
+.pagina{
+    max-width:650px;
+    margin:auto;
+    padding:28px 22px 60px;
+}
+
+/* VOLVER */
+
+.volver{
+    width:52px;
+    height:52px;
+    border:none;
+    border-radius:50%;
+    background:white;
+    font-size:28px;
+    cursor:pointer;
+    box-shadow:0 2px 10px rgba(0,0,0,.08);
+    margin-bottom:25px;
+}
+
+/* ENCABEZADO */
+
+h1{
+    font-size:36px;
+    margin:0 0 7px;
+}
+
+.subtitulo{
+    color:#777;
+    font-size:16px;
+    margin-bottom:28px;
+}
+
+/* SELECTOR DE MES */
+
+.selector-mes{
+    background:white;
+    border-radius:18px;
+    padding:14px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    margin-bottom:22px;
+
+    box-shadow:0 3px 15px rgba(0,0,0,.05);
+}
+
+.selector-mes button{
+    width:42px;
+    height:42px;
+
+    border:none;
+    border-radius:50%;
+
+    background:#f2f2f2;
+
+    font-size:22px;
+    cursor:pointer;
+}
+
+#mesActual{
+    font-size:18px;
+    font-weight:bold;
+    text-transform:capitalize;
+}
+
+/* TARJETAS */
+
+.resumen{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:13px;
+    margin-bottom:22px;
+}
+
+.tarjeta{
+    background:white;
+    border-radius:20px;
+    padding:22px 12px;
+    text-align:center;
+
+    box-shadow:0 3px 15px rgba(0,0,0,.05);
+}
+
+.numero{
+    font-size:34px;
+    font-weight:bold;
+    margin-bottom:5px;
+}
+
+.etiqueta{
+    color:#777;
+    font-size:14px;
+}
+
+/* BLOQUES */
+
+.bloque{
+    background:white;
+    border-radius:20px;
+    padding:22px;
+
+    margin-bottom:18px;
+
+    box-shadow:0 3px 15px rgba(0,0,0,.05);
+}
+
+.titulo-bloque{
+    font-size:18px;
+    font-weight:bold;
+    margin-bottom:18px;
+}
+
+/* PORCENTAJE */
+
+.linea-datos{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:10px;
+}
+
+.porcentaje{
+    font-size:25px;
+    font-weight:bold;
+}
+
+.barra{
+    width:100%;
+    height:12px;
+    background:#ececec;
+    border-radius:20px;
+    overflow:hidden;
+}
+
+.progreso{
+    height:100%;
+    width:0%;
+    background:#222;
+    border-radius:20px;
+    transition:width .5s ease;
+}
+
+/* META */
+
+.meta-cabecera{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:13px;
+}
+
+.trofeo{
+    font-size:45px;
+}
+
+.meta-numero{
+    font-size:26px;
+    font-weight:bold;
+}
+
+.meta-texto{
+    color:#777;
+    font-size:14px;
+    margin-top:11px;
+}
+
+/* PROMEDIOS */
+
+.promedios{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+}
+
+.promedio{
+    background:#f4f4f4;
+    border-radius:16px;
+    padding:18px 10px;
+    text-align:center;
+}
+
+.promedio-numero{
+    font-size:25px;
+    font-weight:bold;
+}
+
+.promedio-texto{
+    font-size:13px;
+    color:#777;
+    margin-top:5px;
+}
+
+/* LOGROS */
+
+.logros{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+}
+
+.logro{
+    background:#f4f4f4;
+    border-radius:17px;
+    padding:18px 12px;
+    text-align:center;
+}
+
+.logro.bloqueado{
+    opacity:.35;
+}
+
+.logro-icono{
+    font-size:34px;
+    margin-bottom:8px;
+}
+
+.logro-nombre{
+    font-size:14px;
+    font-weight:bold;
+}
+
+.logro-detalle{
+    font-size:11px;
+    color:#777;
+    margin-top:4px;
+}
+
+/* SIN ACTIVIDAD */
+
+.sin-actividad{
+    display:none;
+    text-align:center;
+    color:#777;
+    padding:8px 0 20px;
+}
+
+@media(max-width:500px){
+
+    h1{
+        font-size:32px;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="pagina">
+
+    <button
+        class="volver"
+        type="button"
+        onclick="window.location.href='mapa.html'"
+    >
+        ←
+    </button>
+
+
+    <h1>Mis estadísticas 🏀</h1>
+
+    <div class="subtitulo">
+        Cada partido suma una nueva historia.
+    </div>
+
+
+    <!-- MES -->
+
+    <div class="selector-mes">
+
+        <button
+            id="mesAnterior"
+            type="button"
+        >
+            ‹
+        </button>
+
+        <div id="mesActual">
+            Mes
+        </div>
+
+        <button
+            id="mesSiguiente"
+            type="button"
+        >
+            ›
+        </button>
+
+    </div>
+
+
+    <div
+        class="sin-actividad"
+        id="sinActividad"
+    >
+        Todavía no tienes partidos registrados este mes.
+    </div>
+
+
+    <!-- RESUMEN -->
+
+    <div class="resumen">
+
+        <div class="tarjeta">
+            <div
+                class="numero"
+                id="partidos"
+            >
+                0
+            </div>
+
+            <div class="etiqueta">
+                Partidos
+            </div>
+        </div>
+
+
+        <div class="tarjeta">
+            <div
+                class="numero"
+                id="victorias"
+            >
+                0
+            </div>
+
+            <div class="etiqueta">
+                Victorias
+            </div>
+        </div>
+
+
+        <div class="tarjeta">
+            <div
+                class="numero"
+                id="derrotas"
+            >
+                0
+            </div>
+
+            <div class="etiqueta">
+                Derrotas
+            </div>
+        </div>
+
+
+        <div class="tarjeta">
+            <div
+                class="numero"
+                id="puntos"
+            >
+                0
+            </div>
+
+            <div class="etiqueta">
+                Puntos
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- PORCENTAJE -->
+
+    <div class="bloque">
+
+        <div class="titulo-bloque">
+            Porcentaje de victorias
+        </div>
+
+        <div class="linea-datos">
+
+            <span>
+                Rendimiento del mes
+            </span>
+
+            <span
+                class="porcentaje"
+                id="porcentajeVictorias"
+            >
+                0%
+            </span>
+
+        </div>
+
+        <div class="barra">
+
+            <div
+                class="progreso"
+                id="barraVictorias"
+            ></div>
+
+        </div>
+
+    </div>
+
+
+    <!-- META -->
+
+    <div class="bloque">
+
+        <div class="meta-cabecera">
+
+            <div>
+
+                <div class="titulo-bloque">
+                    Meta del mes
+                </div>
+
+                <div
+                    class="meta-numero"
+                    id="metaNumero"
+                >
+                    0 / 10
+                </div>
+
+            </div>
+
+            <div class="trofeo">
+                🏆
+            </div>
+
+        </div>
+
+
+        <div class="barra">
+
+            <div
+                class="progreso"
+                id="barraMeta"
+            ></div>
+
+        </div>
+
+
+        <div
+            class="meta-texto"
+            id="textoMeta"
+        >
+            Tu próximo partido te acerca a la meta.
+        </div>
+
+    </div>
+
+
+    <!-- PROMEDIOS -->
+
+    <div class="bloque">
+
+        <div class="titulo-bloque">
+            Promedios
+        </div>
+
+        <div class="promedios">
+
+            <div class="promedio">
+
+                <div
+                    class="promedio-numero"
+                    id="promedioPuntos"
+                >
+                    0
+                </div>
+
+                <div class="promedio-texto">
+                    Puntos / partido
+                </div>
+
+            </div>
+
+
+            <div class="promedio">
+
+                <div
+                    class="promedio-numero"
+                    id="promedioVictorias"
+                >
+                    0%
+                </div>
+
+                <div class="promedio-texto">
+                    Victorias
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- LOGROS -->
+
+    <div class="bloque">
+
+        <div class="titulo-bloque">
+            Mis logros
+        </div>
+
+        <div class="logros">
+
+
+            <div
+                class="logro"
+                id="logroPrimeraCancha"
+            >
+
+                <div class="logro-icono">
+                    🏀
+                </div>
+
+                <div class="logro-nombre">
+                    Primera cancha
+                </div>
+
+                <div class="logro-detalle">
+                    Visita una cancha
+                </div>
+
+            </div>
+
+
+            <div
+                class="logro"
+                id="logro10Victorias"
+            >
+
+                <div class="logro-icono">
+                    🏆
+                </div>
+
+                <div class="logro-nombre">
+                    10 victorias
+                </div>
+
+                <div class="logro-detalle">
+                    Alcanza 10 victorias
+                </div>
+
+            </div>
+
+
+            <div
+                class="logro"
+                id="logro100Puntos"
+            >
+
+                <div class="logro-icono">
+                    🔥
+                </div>
+
+                <div class="logro-nombre">
+                    100 puntos
+                </div>
+
+                <div class="logro-detalle">
+                    Anota 100 puntos
+                </div>
+
+            </div>
+
+
+            <div
+                class="logro"
+                id="logro5Canchas"
+            >
+
+                <div class="logro-icono">
+                    🗺️
+                </div>
+
+                <div class="logro-nombre">
+                    Explorador
+                </div>
+
+                <div class="logro-detalle">
+                    Visita 5 canchas
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =========================
+   DATOS
+========================= */
+
+const canchas =
+    JSON.parse(
+        localStorage.getItem(
+            "canchasBasketballPassport"
+        )
+    ) || [];
+
+
+/* =========================
+   MES MOSTRADO
+========================= */
+
+let fechaMostrada =
+    new Date();
+
+
+fechaMostrada.setDate(1);
+
+
+/* =========================
+   FORMATEAR MES
+========================= */
+
+function nombreMes(fecha){
+
+    return fecha.toLocaleDateString(
+        "es-ES",
+        {
+            month:"long",
+            year:"numeric"
+        }
+    );
+
+}
+
+
+/* =========================
+   ACTUALIZAR ESTADÍSTICAS
+========================= */
+
+function actualizarEstadisticas(){
+
+
+    document.getElementById(
+        "mesActual"
+    ).textContent =
+        nombreMes(
+            fechaMostrada
+        );
+
+
+    const mes =
+        fechaMostrada.getMonth();
+
+
+    const anio =
+        fechaMostrada.getFullYear();
+
+
+    /*
+       Solo contamos canchas cuya fecha
+       corresponda al mes seleccionado.
+    */
+
+    const canchasDelMes =
+        canchas.filter(
+            function(cancha){
+
+
+                if (!cancha.fecha) {
+                    return false;
+                }
+
+
+                const partes =
+                    cancha.fecha.split("-");
+
+
+                if (partes.length !== 3) {
+                    return false;
+                }
+
+
+                const anioCancha =
+                    Number(
+                        partes[0]
+                    );
+
+
+                const mesCancha =
+                    Number(
+                        partes[1]
+                    ) - 1;
+
+
+                return (
+                    anioCancha === anio &&
+                    mesCancha === mes
+                );
+
+            }
+        );
+
+
+    let partidos = 0;
+    let victorias = 0;
+    let derrotas = 0;
+    let puntos = 0;
+
+
+    canchasDelMes.forEach(
+        function(cancha){
+
+            partidos +=
+                Number(
+                    cancha.partidos || 0
+                );
+
+            victorias +=
+                Number(
+                    cancha.victorias || 0
+                );
+
+            derrotas +=
+                Number(
+                    cancha.derrotas || 0
+                );
+
+            puntos +=
+                Number(
+                    cancha.puntos || 0
+                );
+
+        }
+    );
+
+
+    /* =========================
+       TARJETAS
+    ========================= */
+
+    document.getElementById(
+        "partidos"
+    ).textContent =
+        partidos;
+
+
+    document.getElementById(
+        "victorias"
+    ).textContent =
+        victorias;
+
+
+    document.getElementById(
+        "derrotas"
+    ).textContent =
+        derrotas;
+
+
+    document.getElementById(
+        "puntos"
+    ).textContent =
+        puntos;
+
+
+    /* =========================
+       PORCENTAJE
+    ========================= */
+
+    let porcentaje = 0;
+
+
+    if (partidos > 0) {
+
+        porcentaje =
+            Math.round(
+                (
+                    victorias /
+                    partidos
+                ) * 100
+            );
+
+    }
+
+
+    porcentaje =
+        Math.min(
+            porcentaje,
+            100
+        );
+
+
+    document.getElementById(
+        "porcentajeVictorias"
+    ).textContent =
+        porcentaje + "%";
+
+
+    document.getElementById(
+        "barraVictorias"
+    ).style.width =
+        porcentaje + "%";
+
+
+    document.getElementById(
+        "promedioVictorias"
+    ).textContent =
+        porcentaje + "%";
+
+
+    /* =========================
+       PROMEDIO DE PUNTOS
+    ========================= */
+
+    let promedioPuntos = 0;
+
+
+    if (partidos > 0) {
+
+        promedioPuntos =
+            (
+                puntos /
+                partidos
+            ).toFixed(1);
+
+    }
+
+
+    document.getElementById(
+        "promedioPuntos"
+    ).textContent =
+        promedioPuntos;
+
+
+    /* =========================
+       META DEL MES
+    ========================= */
+
+    const metaPartidos = 10;
+
+
+    document.getElementById(
+        "metaNumero"
+    ).textContent =
+        partidos +
+        " / " +
+        metaPartidos;
+
+
+    const progresoMeta =
+        Math.min(
+            (
+                partidos /
+                metaPartidos
+            ) * 100,
+            100
+        );
+
+
+    document.getElementById(
+        "barraMeta"
+    ).style.width =
+        progresoMeta + "%";
+
+
+    const faltan =
+        Math.max(
+            metaPartidos -
+            partidos,
+            0
+        );
+
+
+    if (faltan === 0) {
+
+        document.getElementById(
+            "textoMeta"
+        ).textContent =
+            "🏆 ¡Meta del mes alcanzada!";
+
+    } else if (faltan === 1) {
+
+        document.getElementById(
+            "textoMeta"
+        ).textContent =
+            "¡Solo falta 1 partido para alcanzar tu meta!";
+
+    } else {
+
+        document.getElementById(
+            "textoMeta"
+        ).textContent =
+            "Te faltan " +
+            faltan +
+            " partidos para alcanzar tu meta.";
+
+    }
+
+
+    /* =========================
+       SIN ACTIVIDAD
+    ========================= */
+
+    document.getElementById(
+        "sinActividad"
+    ).style.display =
+        partidos === 0
+        ?
+        "block"
+        :
+        "none";
+
+
+    actualizarLogros();
+
+}
+
+
+/* =========================
+   LOGROS GENERALES
+========================= */
+
+function actualizarLogros(){
+
+
+    let victoriasTotales = 0;
+    let puntosTotales = 0;
+
+
+    canchas.forEach(
+        function(cancha){
+
+            victoriasTotales +=
+                Number(
+                    cancha.victorias || 0
+                );
+
+            puntosTotales +=
+                Number(
+                    cancha.puntos || 0
+                );
+
+        }
+    );
+
+
+    /* PRIMERA CANCHA */
+
+    cambiarLogro(
+
+        "logroPrimeraCancha",
+
+        canchas.length >= 1
+
+    );
+
+
+    /* 10 VICTORIAS */
+
+    cambiarLogro(
+
+        "logro10Victorias",
+
+        victoriasTotales >= 10
+
+    );
+
+
+    /* 100 PUNTOS */
+
+    cambiarLogro(
+
+        "logro100Puntos",
+
+        puntosTotales >= 100
+
+    );
+
+
+    /* 5 CANCHAS */
+
+    cambiarLogro(
+
+        "logro5Canchas",
+
+        canchas.length >= 5
+
+    );
+
+}
+
+
+/* =========================
+   ACTIVAR / BLOQUEAR LOGRO
+========================= */
+
+function cambiarLogro(
+    id,
+    desbloqueado
+){
+
+    const elemento =
+        document.getElementById(
+            id
+        );
+
+
+    if (desbloqueado) {
+
+        elemento.classList.remove(
+            "bloqueado"
+        );
+
+    } else {
+
+        elemento.classList.add(
+            "bloqueado"
+        );
+
+    }
+
+}
+
+
+/* =========================
+   CAMBIAR MES
+========================= */
+
+document.getElementById(
+    "mesAnterior"
+).onclick =
+    function(){
+
+        fechaMostrada.setMonth(
+            fechaMostrada.getMonth() - 1
+        );
+
+        actualizarEstadisticas();
+
+    };
+
+
+document.getElementById(
+    "mesSiguiente"
+).onclick =
+    function(){
+
+        fechaMostrada.setMonth(
+            fechaMostrada.getMonth() + 1
+        );
+
+        actualizarEstadisticas();
+
+    };
+
+
+/* =========================
+   INICIAR
+========================= */
+
+actualizarEstadisticas();
+
+</script>
+
+</body>
+</html>
