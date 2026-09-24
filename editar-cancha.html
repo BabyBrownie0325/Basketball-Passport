@@ -251,11 +251,24 @@
         .upload(nombreArchivo, archivo);
 
     if (error) {
-        alert("No se pudo subir la foto: " + error.message);
-        return;
-    }
+    alert("No se pudo subir la foto: " + error.message);
+    return;
+}
 
-    alert("¡Foto subida correctamente! 🏀📸");
+/* MOSTRAR LA FOTO EN EL RECUADRO */
+const previewFoto = document.getElementById("previewFoto");
+const textoFoto = document.getElementById("textoFoto");
+
+previewFoto.src = URL.createObjectURL(archivo);
+previewFoto.style.display = "block";
+previewFoto.style.width = "100%";
+previewFoto.style.height = "100%";
+previewFoto.style.objectFit = "cover";
+
+textoFoto.style.display = "none";
+
+alert("¡Foto subida correctamente! 🏀📷");
+            
 });
 </script>
 </body>
