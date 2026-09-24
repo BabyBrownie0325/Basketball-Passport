@@ -255,6 +255,17 @@
     return;
 }
 
+    if (error) {
+    alert("No se pudo subir la foto: " + error.message);
+    return;
+}
+
+const { data: urlData } = supabaseClient.storage
+    .from("fotos-canchas")
+    .getPublicUrl(nombreArchivo);
+
+localStorage.setItem("fotoCanchaEjemplo", urlData.publicUrl);
+            
 /* MOSTRAR LA FOTO EN EL RECUADRO */
 const previewFoto = document.getElementById("previewFoto");
 const textoFoto = document.getElementById("textoFoto");
