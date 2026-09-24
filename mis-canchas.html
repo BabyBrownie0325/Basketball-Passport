@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Mis canchas | Basketball Passport</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+    background:#f5f5f5;
+    color:#222;
+}
+
+.pagina{
+    max-width:650px;
+    margin:auto;
+    padding:28px 22px 60px;
+}
+
+/* VOLVER */
+
+.volver{
+    width:52px;
+    height:52px;
+    border:none;
+    border-radius:50%;
+    background:white;
+    font-size:28px;
+    cursor:pointer;
+    margin-bottom:25px;
+    box-shadow:0 2px 10px rgba(0,0,0,.08);
+}
+
+h1{
+    font-size:36px;
+    margin:0 0 7px;
+}
+
+.subtitulo{
+    color:#777;
+    font-size:16px;
+    margin-bottom:25px;
+}
+
+/* RESUMEN */
+
+.resumen{
+    background:#222;
+    color:white;
+    border-radius:22px;
+    padding:22px;
+    margin-bottom:24px;
+}
+
+.resumen-titulo{
+    font-size:13px;
+    opacity:.7;
+    margin-bottom:6px;
+}
+
+.resumen-numero{
+    font-size:38px;
+    font-weight:bold;
+}
+
+.resumen-texto{
+    font-size:14px;
+    margin-top:3px;
+    opacity:.8;
+}
+
+/* BUSCADOR */
+
+.buscador{
+    width:100%;
+    border:1px solid #ddd;
+    border-radius:16px;
+    padding:15px 17px;
+    background:white;
+    font-size:16px;
+    margin-bottom:22px;
+    outline:none;
+}
+
+/* LISTA */
+
+.lista{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+}
+
+/* TARJETA */
+
+.cancha{
+    background:white;
+    border-radius:20px;
+    padding:18px;
+
+    display:flex;
+    align-items:center;
+    gap:15px;
+
+    cursor:pointer;
+
+    box-shadow:0 3px 15px rgba(0,0,0,.05);
+
+    transition:
+        transform .15s ease,
+        box-shadow .15s ease;
+}
+
+.cancha:active{
+    transform:scale(.98);
+}
+
+.icono-cancha{
+    width:62px;
+    height:62px;
+    min-width:62px;
+
+    border-radius:18px;
+
+    background:#f0f0f0;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:34px;
+}
+
+.cancha-info{
+    flex:1;
+    min-width:0;
+}
+
+.cancha-nombre{
+    font-size:17px;
+    font-weight:bold;
+    margin-bottom:5px;
+
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.cancha-ubicacion{
+    font-size:13px;
+    color:#777;
+    margin-bottom:6px;
+
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.cancha-estrellas{
+    font-size:14px;
+}
+
+.flecha{
+    font-size:24px;
+    color:#aaa;
+}
+
+/* VACÍO */
+
+.vacio{
+    display:none;
+    background:white;
+    border-radius:20px;
+    padding:40px 25px;
+    text-align:center;
+    margin-top:10px;
+}
+
+.vacio-icono{
+    font-size:48px;
+    margin-bottom:14px;
+}
+
+.vacio-titulo{
+    font-size:18px;
+    font-weight:bold;
+    margin-bottom:7px;
+}
+
+.vacio-texto{
+    color:#777;
+    font-size:14px;
+    line-height:1.5;
+}
+
+/* AGREGAR */
+
+.agregar{
+    width:100%;
+    border:none;
+    border-radius:17px;
+    padding:17px;
+
+    background:#222;
+    color:white;
+
+    font-size:16px;
+    font-weight:bold;
+
+    cursor:pointer;
+
+    margin-top:24px;
+}
+
+@media(max-width:500px){
+
+    h1{
+        font-size:32px;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="pagina">
+
+    <button
+        class="volver"
+        type="button"
+        onclick="window.location.href='mapa.html'"
+    >
+        ←
+    </button>
+
+
+    <h1>Mis canchas 🏀</h1>
+
+    <div class="subtitulo">
+        Todos los lugares que ya forman parte de tu pasaporte.
+    </div>
+
+
+    <!-- RESUMEN -->
+
+    <div class="resumen">
+
+        <div class="resumen-titulo">
+            MI PASAPORTE
+        </div>
+
+        <div
+            class="resumen-numero"
+            id="totalCanchas"
+        >
+            0
+        </div>
+
+        <div class="resumen-texto">
+            canchas visitadas
+        </div>
+
+    </div>
+
+
+    <!-- BUSCADOR -->
+
+    <input
+        class="buscador"
+        id="buscador"
+        type="text"
+        placeholder="🔎 Buscar cancha o ubicación..."
+    >
+
+
+    <!-- LISTA -->
+
+    <div
+        class="lista"
+        id="listaCanchas"
+    ></div>
+
+
+    <!-- SIN RESULTADOS -->
+
+    <div
+        class="vacio"
+        id="sinResultados"
+    >
+
+        <div class="vacio-icono">
+            🏀
+        </div>
+
+        <div class="vacio-titulo">
+            No encontramos esa cancha
+        </div>
+
+        <div class="vacio-texto">
+            Prueba buscando otro nombre o ubicación.
+        </div>
+
+    </div>
+
+
+    <!-- SIN CANCHAS -->
+
+    <div
+        class="vacio"
+        id="sinCanchas"
+    >
+
+        <div class="vacio-icono">
+            🗺️
+        </div>
+
+        <div class="vacio-titulo">
+            Tu pasaporte está esperando
+        </div>
+
+        <div class="vacio-texto">
+            Agrega tu primera cancha desde el mapa para comenzar tu colección.
+        </div>
+
+    </div>
+
+
+    <button
+        class="agregar"
+        id="volverMapa"
+        type="button"
+    >
+        + AGREGAR OTRA CANCHA
+    </button>
+
+</div>
+
+
+<script>
+
+/* =========================
+   OBTENER CANCHAS
+========================= */
+
+const canchas =
+    JSON.parse(
+        localStorage.getItem(
+            "canchasBasketballPassport"
+        )
+    ) || [];
+
+
+const listaCanchas =
+    document.getElementById(
+        "listaCanchas"
+    );
+
+
+const buscador =
+    document.getElementById(
+        "buscador"
+    );
+
+
+const sinResultados =
+    document.getElementById(
+        "sinResultados"
+    );
+
+
+const sinCanchas =
+    document.getElementById(
+        "sinCanchas"
+    );
+
+
+/* =========================
+   TOTAL
+========================= */
+
+document.getElementById(
+    "totalCanchas"
+).textContent =
+    canchas.length;
+
+
+/* =========================
+   ABRIR CANCHA
+========================= */
+
+function abrirCancha(id){
+
+    localStorage.setItem(
+        "canchaSeleccionada",
+        id
+    );
+
+    window.location.href =
+        "cancha.html";
+
+}
+
+
+/* =========================
+   DIBUJAR LISTA
+========================= */
+
+function mostrarCanchas(
+    lista
+){
+
+    listaCanchas.innerHTML =
+        "";
+
+
+    sinResultados.style.display =
+        "none";
+
+
+    sinCanchas.style.display =
+        "none";
+
+
+    /*
+       Si todavía no existe ninguna cancha.
+    */
+
+    if (canchas.length === 0){
+
+        sinCanchas.style.display =
+            "block";
+
+        return;
+
+    }
+
+
+    /*
+       Si el buscador no encuentra nada.
+    */
+
+    if (lista.length === 0){
+
+        sinResultados.style.display =
+            "block";
+
+        return;
+
+    }
+
+
+    lista.forEach(
+        function(cancha){
+
+
+            const tarjeta =
+                document.createElement(
+                    "div"
+                );
+
+
+            tarjeta.className =
+                "cancha";
+
+
+            const estrellas =
+                "★".repeat(
+                    Number(
+                        cancha.estrellas || 0
+                    )
+                );
+
+
+            tarjeta.innerHTML = `
+
+                <div class="icono-cancha">
+                    🏀
+                </div>
+
+
+                <div class="cancha-info">
+
+                    <div class="cancha-nombre">
+                        ${cancha.nombre || "Cancha"}
+                    </div>
+
+                    <div class="cancha-ubicacion">
+                        📍 ${cancha.ubicacion || "Sin ubicación"}
+                    </div>
+
+                    <div class="cancha-estrellas">
+                        ${estrellas}
+                    </div>
+
+                </div>
+
+
+                <div class="flecha">
+                    ›
+                </div>
+
+            `;
+
+
+            tarjeta.onclick =
+                function(){
+
+                    abrirCancha(
+                        cancha.id
+                    );
+
+                };
+
+
+            listaCanchas.appendChild(
+                tarjeta
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================
+   BUSCADOR
+========================= */
+
+buscador.addEventListener(
+    "input",
+    function(){
+
+
+        const texto =
+            this.value
+                .trim()
+                .toLowerCase();
+
+
+        if (!texto){
+
+            mostrarCanchas(
+                canchas
+            );
+
+            return;
+
+        }
+
+
+        const filtradas =
+            canchas.filter(
+                function(cancha){
+
+
+                    const nombre =
+                        String(
+                            cancha.nombre || ""
+                        ).toLowerCase();
+
+
+                    const ubicacion =
+                        String(
+                            cancha.ubicacion || ""
+                        ).toLowerCase();
+
+
+                    return (
+                        nombre.includes(texto) ||
+                        ubicacion.includes(texto)
+                    );
+
+                }
+            );
+
+
+        mostrarCanchas(
+            filtradas
+        );
+
+    }
+);
+
+
+/* =========================
+   AGREGAR OTRA
+========================= */
+
+document.getElementById(
+    "volverMapa"
+).onclick =
+    function(){
+
+        window.location.href =
+            "mapa.html";
+
+    };
+
+
+/* =========================
+   INICIAR
+========================= */
+
+mostrarCanchas(
+    canchas
+);
+
+</script>
+
+</body>
+</html>
