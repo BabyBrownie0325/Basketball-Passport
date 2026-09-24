@@ -189,6 +189,30 @@
     </button>
 
 </div>
+<script>
+    const botonGuardar = document.querySelector(".guardar");
 
+    botonGuardar.addEventListener("click", function () {
+
+        const datosCancha = {
+            nombre: document.getElementById("nombre").value,
+            ubicacion: document.getElementById("ubicacion").value,
+            estrellas: document.getElementById("estrellas").value,
+            fecha: document.getElementById("fecha").value,
+            partidos: document.getElementById("partidos").value,
+            victorias: document.getElementById("victorias").value,
+            derrotas: document.getElementById("derrotas").value,
+            puntos: document.getElementById("puntos").value,
+            recuerdo: document.getElementById("recuerdo").value
+        };
+
+        localStorage.setItem(
+            "canchaEjemplo",
+            JSON.stringify(datosCancha)
+        );
+
+        window.location.href = "cancha.html";
+    });
+</script>
 </body>
 </html>
