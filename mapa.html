@@ -214,9 +214,10 @@ html, body{
 
 
     <a class="menu-item" href="#" id="agregarCancha">
-    <span class="menu-icon">➕</span>
-    Agregar cancha
-</a>
+        <span class="menu-icon">➕</span>
+        Agregar cancha
+    </a>
+
 
     <a class="menu-item" href="#">
         <span class="menu-icon">⚙️</span>
@@ -234,7 +235,7 @@ html, body{
 
 <!-- BOTÓN PARA ABRIR MENU -->
 
-<button id="menuButton">
+<button id="menuButton" type="button">
 🏀
 </button>
 
@@ -314,37 +315,76 @@ let canchas = JSON.parse(
     localStorage.getItem("canchasBasketballPassport")
 ) || [];
 
+
 /* Si todavía no existe ninguna cancha,
    conservamos la cancha de prueba */
+
 if (canchas.length === 0) {
+
     canchas.push({
+
         id: Date.now(),
+
         nombre: "Cancha de prueba",
+
         ubicacion: "Caracas, Venezuela",
+
         estrellas: 5,
+
         latitud: 10.4806,
+
         longitud: -66.9036
+
     });
 
-    localStorage.setItem("canchasBasketballPassport", JSON.stringify(canchas));
+    localStorage.setItem(
+        "canchasBasketballPassport",
+        JSON.stringify(canchas)
+    );
 }
 
-/* Mostrar todas las canchas en el mapa */
+
+/* =========================
+   MOSTRAR CANCHAS
+========================= */
+
 canchas.forEach(function(cancha) {
 
-    const lat = cancha.latitud ?? cancha.lat;
-    const lng = cancha.longitud ?? cancha.logongitud ?? cancha.lng;
+    /*
+       Compatibilidad con canchas antiguas
+       que pudieron guardarse con otros nombres
+       para las coordenadas.
+    */
+
+    const lat =
+        cancha.latitud ??
+        cancha.lat;
+
+    const lng =
+        cancha.longitud ??
+        cancha.logongitud ??
+        cancha.lng;
+
+
+    /* Si una cancha no tiene coordenadas válidas,
+       simplemente no intentamos dibujarla. */
 
     if (lat == null || lng == null) {
         return;
     }
 
+
     const marcador = L.marker(
+
         [lat, lng],
+
         { icon: basketballIcon }
+
     ).addTo(map);
 
+
     marcador.bindPopup(`
+
         <div style="
             width:210px;
             font-family:Arial,sans-serif;
@@ -370,7 +410,9 @@ canchas.forEach(function(cancha) {
                 font-size:16px;
                 margin-bottom:10px;
             ">
-                ${"★".repeat(Number(cancha.estrellas || 0))}
+                ${"★".repeat(
+                    Number(cancha.estrellas || 0)
+                )}
             </div>
 
             <button
@@ -390,157 +432,327 @@ canchas.forEach(function(cancha) {
             </button>
 
         </div>
+
     `);
+
 });
 
+
+/* =========================
+   ABRIR CANCHA GUARDADA
+========================= */
+
 function abrirCancha(id) {
-    localStorage.setItem("canchaSeleccionada", id);
-    window.location.href = "cancha.html";
+
+    localStorage.setItem(
+        "canchaSeleccionada",
+        id
+    );
+
+    window.location.href =
+        "cancha.html";
+
 }
+
 
 /* =========================
    MENÚ LATERAL
 ========================= */
 
-const menuButton = document.getElementById("menuButton");
-const sideMenu = document.getElementById("sideMenu");
-const overlay = document.getElementById("overlay");
+const menuButton =
+    document.getElementById("menuButton");
+
+const sideMenu =
+    document.getElementById("sideMenu");
+
+const overlay =
+    document.getElementById("overlay");
+
 
 menuButton.onclick = function () {
+
     sideMenu.classList.toggle("open");
+
     overlay.classList.toggle("show");
+
 };
 
+
 overlay.onclick = function () {
+
     sideMenu.classList.remove("open");
+
     overlay.classList.remove("show");
+
 };
+
 
 /* =========================
    AGREGAR CANCHA MANUALMENTE
 ========================= */
 
-const agregarCancha = document.getElementById("agregarCancha");
+const agregarCancha =
+    document.getElementById("agregarCancha");
 
-agregarCancha.onclick = function (event) {
+
+agregarCancha.onclick = function(event) {
+
     event.preventDefault();
 
-    // Cerrar menú
+
+    /* Cerrar menú */
+
     sideMenu.classList.remove("open");
+
     overlay.classList.remove("show");
 
-    // Avisar al usuario
-    alert("📍 Busca la cancha en el mapa y toca su ubicación exacta.");
 
-    // Esperar un toque en el mapa
-    map.once("click", function(e) {
+    /* Instrucción */
 
-        const latitud = e.latlng.lat;
-        const longitud = e.latlng.lng;
-
-        // Colocar balón temporal
-        const marcadorTemporal = L.marker(
-            [latitud, longitud],
-            { icon: basketballIcon, draggable: true }
-        ).addTo(map);
-
-      marcadorTemporal.bindPopup(`
-    <div style="text-align:center; width:190px;">
-        <strong>🏀 Nueva cancha</strong>
-
-        <p style="font-size:13px;">
-            ¿Es esta la ubicación correcta?
-        </p>
-
-        <button
-            id="confirmarUbicacion"
-            style="
-                width:100%;
-                border:none;
-                padding:10px;
-                margin-bottom:7px;
-                border-radius:8px;
-                background:#222;
-                color:white;
-                font-weight:bold;
-                cursor:pointer;
-            "
-        >
-            CONFIRMAR UBICACIÓN →
-        </button>
-
-        <button
-            id="quitarBalon"
-            style="
-                width:100%;
-                border:1px solid #ccc;
-                padding:8px;
-                border-radius:8px;
-                background:white;
-                color:#222;
-                cursor:pointer;
-            "
-        >
-            ✕ Quitar balón
-        </button>
-    </div>
-`).openPopup();
-
-
-/* BOTONES DEL BALÓN TEMPORAL */
-
-const popup = marcadorTemporal.getPopup().getElement();
-
-popup.querySelector("#quitarBalon").onclick = function () {
-    map.removeLayer(marcadorTemporal);
-};
-
-popup.querySelector("#confirmarUbicacion").onclick = function () {
-
-    const posicion = marcadorTemporal.getLatLng();
-
-    localStorage.setItem(
-        "nuevaCanchaUbicacion",
-        JSON.stringify({
-            latitud: posicion.lat,
-            longitud: posicion.lng
-        })
+    alert(
+        "📍 Busca la cancha en el mapa y toca su ubicación exacta."
     );
 
-    window.location.href = "agregar-cancha.html";
-};
-    .getPopup()
-    .getElement()
-    .querySelector("button");
 
-botonQuitar._marcador = marcadorTemporal;
+    /*
+       Esperamos un solo toque en el mapa.
+       Si el usuario vuelve a pulsar Agregar cancha,
+       podrá iniciar nuevamente el proceso.
+    */
+
+    map.once("click", function(e) {
+
+
+        const latitud =
+            e.latlng.lat;
+
+        const longitud =
+            e.latlng.lng;
+
+
+        /* =========================
+           BALÓN TEMPORAL
+        ========================= */
+
+        const marcadorTemporal = L.marker(
+
+            [latitud, longitud],
+
+            {
+
+                icon:basketballIcon,
+
+                draggable:true
+
+            }
+
+        ).addTo(map);
+
+
+        /* =========================
+           POPUP DE CONFIRMACIÓN
+        ========================= */
+
+        marcadorTemporal.bindPopup(`
+
+            <div style="
+                text-align:center;
+                width:190px;
+                font-family:Arial,sans-serif;
+            ">
+
+                <strong>
+                    🏀 Nueva cancha
+                </strong>
+
+                <p style="
+                    font-size:13px;
+                    margin:10px 0;
+                ">
+                    ¿Es esta la ubicación correcta?
+                </p>
+
+
+                <button
+                    id="confirmarUbicacion"
+                    style="
+                        width:100%;
+                        border:none;
+                        padding:10px;
+                        margin-bottom:7px;
+                        border-radius:8px;
+                        background:#222;
+                        color:white;
+                        font-weight:bold;
+                        cursor:pointer;
+                    "
+                >
+                    CONFIRMAR UBICACIÓN →
+                </button>
+
+
+                <button
+                    id="quitarBalon"
+                    style="
+                        width:100%;
+                        border:1px solid #ccc;
+                        padding:8px;
+                        border-radius:8px;
+                        background:white;
+                        color:#222;
+                        cursor:pointer;
+                    "
+                >
+                    ✕ Quitar balón
+                </button>
+
+            </div>
+
+        `);
+
+
+        /*
+           Abrimos el popup después de añadir
+           el marcador al mapa.
+        */
+
+        marcadorTemporal.openPopup();
+
+
+        /* =========================
+           BOTONES DEL POPUP
+        ========================= */
+
+        const popup =
+            marcadorTemporal
+                .getPopup()
+                .getElement();
+
+
+        const botonQuitar =
+            popup.querySelector(
+                "#quitarBalon"
+            );
+
+
+        const botonConfirmar =
+            popup.querySelector(
+                "#confirmarUbicacion"
+            );
+
+
+        /* QUITAR BALÓN */
+
+        botonQuitar.onclick = function() {
+
+            map.removeLayer(
+                marcadorTemporal
+            );
+
+        };
+
+
+        /* CONFIRMAR UBICACIÓN */
+
+        botonConfirmar.onclick = function() {
+
+
+            /*
+               Como el marcador puede arrastrarse,
+               obtenemos su posición FINAL.
+            */
+
+            const posicion =
+                marcadorTemporal.getLatLng();
+
+
+            /*
+               Guardamos temporalmente las
+               coordenadas seleccionadas.
+            */
+
+            localStorage.setItem(
+
+                "nuevaCanchaUbicacion",
+
+                JSON.stringify({
+
+                    latitud:
+                        posicion.lat,
+
+                    longitud:
+                        posicion.lng
+
+                })
+
+            );
+
+
+            /*
+               Abrimos el formulario que
+               ya diseñaste.
+            */
+
+            window.location.href =
+                "agregar-cancha.html";
+
+        };
 
     });
+
 };
+
 </script>
-<!-- PROTEGER PASAPORTE CON SUPABASE -->
+
+
+<!-- =========================
+     PROTEGER PASAPORTE
+     CON SUPABASE
+========================= -->
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
-    const SUPABASE_URL = "https://mybctirrilqkucnkaztx.supabase.co/";
-    const SUPABASE_KEY = "sb_publishable_tDdp8eOCmHOJJIfVm2WdHA_M3Q962Mc";
 
-    const supabaseClient = supabase.createClient(
+const SUPABASE_URL =
+    "https://mybctirrilqkucnkaztx.supabase.co/";
+
+const SUPABASE_KEY =
+    "sb_publishable_tDdp8eOCmHOJJIfVm2WdHA_M3Q962Mc";
+
+
+const supabaseClient =
+    supabase.createClient(
+
         SUPABASE_URL,
+
         SUPABASE_KEY
+
     );
 
-    async function protegerPasaporte() {
 
-        const { data: { session } } =
-            await supabaseClient.auth.getSession();
+async function protegerPasaporte() {
 
-        if (!session) {
-            window.location.replace("login.html");
-        }
+    const {
+        data: { session }
+    } =
+        await supabaseClient.auth.getSession();
+
+
+    if (!session) {
+
+        window.location.replace(
+            "login.html"
+        );
+
     }
 
-    protegerPasaporte();
+}
+
+
+protegerPasaporte();
+
 </script>
+
 </body>
 </html>
