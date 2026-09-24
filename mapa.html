@@ -393,71 +393,22 @@ function abrirCancha(id) {
 }
 
 /* =========================
-   MENU
+   MENÚ LATERAL
 ========================= */
 
-const menuButton =
-document.getElementById("menuButton");
+const menuButton = document.getElementById("menuButton");
+const sideMenu = document.getElementById("sideMenu");
+const overlay = document.getElementById("overlay");
 
-const sideMenu =
-document.getElementById("sideMenu");
+menuButton.onclick = function () {
+    sideMenu.classList.toggle("open");
+    overlay.classList.toggle("show");
+};
 
-const overlay =
-document.getElementById("overlay");
-
-
-function abrirMenu(){
-
-    sideMenu.classList.add("open");
-
-    overlay.classList.add("show");
-
-}
-
-
-function cerrarMenu(){
-
+overlay.onclick = function () {
     sideMenu.classList.remove("open");
-
     overlay.classList.remove("show");
-
-}
-
-
-/* BALÓN ABRE Y CIERRA */
-    
-menuButton.addEventListener(
-    "click",
-    function(){
-
-        if(sideMenu.classList.contains("open")){
-
-            cerrarMenu();
-
-        }else{
-
-            abrirMenu();
-
-        }
-
-    }
-);
-
-
-/* TOCAR FUERA CIERRA */
-
-overlay.addEventListener(
-    "click",
-    cerrarMenu
-);
-
-
-/* TOCAR MAPA CIERRA */
-
-map.on(
-    "click",
-    cerrarMenu
-);
+};
 
 
 </script>
