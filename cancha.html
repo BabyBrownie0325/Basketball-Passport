@@ -208,9 +208,9 @@
             Mi recuerdo
         </div>
 
-        <div class="comentario">
-            Gran cancha. Uno de mis lugares favoritos para jugar con los panas. 🏀
-        </div>
+        <div class="comentario" id="recuerdoCancha">
+    Gran cancha. Uno de mis lugares favoritos para jugar con los panas. 🏀
+</div>
 
 
         <button class="editar" onclick="window.location.href='editar-cancha.html'">
@@ -221,10 +221,14 @@
 
 </div>
 <script>
-    const datosGuardados = localStorage.getItem("canchaEjemplo");
+   const datosGuardados = localStorage.getItem("canchaEjemplo");
 
-    if (datosGuardados) {
-        const datosCancha = JSON.parse(datosGuardados);
+if (datosGuardados) {
+    const datosCancha = JSON.parse(datosGuardados);
+
+    document.getElementById("recuerdoCancha").textContent =
+        datosCancha.recuerdo;
+}
 
         document.getElementById("nombreCancha").textContent =
             datosCancha.nombre + " 🏀";
