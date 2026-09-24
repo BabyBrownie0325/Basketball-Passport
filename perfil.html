@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Mi perfil | Basketball Passport</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+    background:#f5f5f5;
+    color:#222;
+}
+
+.pagina{
+    max-width:650px;
+    margin:auto;
+    padding:28px 22px 60px;
+}
+
+/* VOLVER */
+
+.volver{
+    width:52px;
+    height:52px;
+    border:none;
+    border-radius:50%;
+    background:white;
+    font-size:28px;
+    cursor:pointer;
+    box-shadow:0 2px 10px rgba(0,0,0,.08);
+    margin-bottom:22px;
+}
+
+/* PERFIL */
+
+.cabecera{
+    text-align:center;
+    margin-bottom:25px;
+}
+
+.avatar{
+    width:112px;
+    height:112px;
+    margin:0 auto 16px;
+
+    border-radius:50%;
+    overflow:hidden;
+
+    background:white;
+
+    border:5px solid white;
+
+    box-shadow:0 5px 18px rgba(0,0,0,.15);
+}
+
+.avatar img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    border-radius:50%;
+    display:block;
+}
+
+.nombre{
+    font-size:29px;
+    font-weight:bold;
+    margin-bottom:6px;
+}
+
+.ubicacion{
+    color:#777;
+    font-size:15px;
+}
+
+.miembro{
+    color:#999;
+    font-size:12px;
+    margin-top:7px;
+}
+
+/* FRASE */
+
+.frase{
+    background:white;
+    border-radius:20px;
+    padding:21px;
+
+    text-align:center;
+
+    font-size:16px;
+    font-style:italic;
+    line-height:1.5;
+
+    margin-bottom:20px;
+
+    box-shadow:0 3px 15px rgba(0,0,0,.05);
+}
+
+/* ESTADÍSTICAS */
+
+.estadisticas{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+    margin-bottom:20px;
+}
+
+.estadistica{
+    background:white;
+    border-radius:19px;
+    padding:20px 10px;
+    text-align:center;
+
+    box-shadow:0 3px 15px rgba(0,0,0,.05);
+}
+
+.estadistica-numero{
+    font-size:29px;
+    font-weight:bold;
+    margin-bottom:5px;
+}
+
+.estadistica-texto{
+    font-size:13px;
+    color:#777;
+}
+
+/* LOGRO */
+
+.logro{
+    background:#222;
+    color:white;
+
+    border-radius:22px;
+    padding:22px;
+
+    display:flex;
+    align-items:center;
+    gap:17px;
+
+    margin-bottom:22px;
+}
+
+.logro-icono{
+    width:65px;
+    height:65px;
+    min-width:65px;
+
+    border-radius:18px;
+
+    background:rgba(255,255,255,.10);
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:38px;
+}
+
+.logro-etiqueta{
+    font-size:12px;
+    opacity:.65;
+    margin-bottom:5px;
+}
+
+.logro-nombre{
+    font-size:18px;
+    font-weight:bold;
+    margin-bottom:3px;
+}
+
+.logro-detalle{
+    font-size:13px;
+    opacity:.75;
+}
+
+/* BOTÓN EDITAR */
+
+.editar{
+    width:100%;
+
+    border:1px solid #ddd;
+    border-radius:17px;
+
+    padding:17px;
+
+    background:white;
+    color:#222;
+
+    font-size:16px;
+    font-weight:bold;
+
+    cursor:pointer;
+}
+
+/* MODAL */
+
+.modal-fondo{
+    position:fixed;
+    inset:0;
+
+    background:rgba(0,0,0,.45);
+
+    display:none;
+    align-items:flex-end;
+    justify-content:center;
+
+    z-index:3000;
+}
+
+.modal-fondo.abierto{
+    display:flex;
+}
+
+.modal{
+    width:100%;
+    max-width:650px;
+
+    background:#f5f5f5;
+
+    border-radius:26px 26px 0 0;
+
+    padding:27px 22px 35px;
+
+    max-height:92vh;
+    overflow-y:auto;
+}
+
+.modal-cabecera{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:24px;
+}
+
+.modal-titulo{
+    font-size:25px;
+    font-weight:bold;
+}
+
+.cerrar{
+    width:42px;
+    height:42px;
+
+    border:none;
+    border-radius:50%;
+
+    background:white;
+
+    font-size:22px;
+    cursor:pointer;
+}
+
+/* SELECTOR AVATAR */
+
+.titulo-avatar{
+    font-size:15px;
+    font-weight:bold;
+    margin-bottom:12px;
+}
+
+.avatares{
+    display:flex;
+    gap:10px;
+
+    overflow-x:auto;
+
+    padding:4px 3px 12px;
+
+    margin-bottom:18px;
+}
+
+.avatar-opcion{
+    width:62px;
+    height:62px;
+
+    min-width:62px;
+
+    border-radius:50%;
+
+    border:3px solid transparent;
+
+    padding:3px;
+
+    background:white;
+
+    cursor:pointer;
+
+    transition:
+        transform .15s ease,
+        border .15s ease;
+}
+
+.avatar-opcion img{
+    width:100%;
+    height:100%;
+
+    object-fit:cover;
+
+    border-radius:50%;
+
+    display:block;
+}
+
+.avatar-opcion.seleccionado{
+    border-color:#222;
+    transform:scale(1.08);
+}
+
+/* CAMPOS */
+
+.campo{
+    margin-bottom:18px;
+}
+
+label{
+    display:block;
+    font-size:15px;
+    font-weight:bold;
+    margin-bottom:8px;
+}
+
+input,
+textarea{
+    width:100%;
+
+    padding:15px;
+
+    border:1px solid #d5d5d5;
+    border-radius:15px;
+
+    background:white;
+
+    font-size:16px;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+textarea{
+    min-height:100px;
+    resize:vertical;
+}
+
+.guardar{
+    width:100%;
+
+    border:none;
+    border-radius:17px;
+
+    padding:17px;
+
+    background:#222;
+    color:white;
+
+    font-size:16px;
+    font-weight:bold;
+
+    cursor:pointer;
+
+    margin-top:5px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="pagina">
+
+    <button
+        class="volver"
+        type="button"
+        onclick="window.location.href='mapa.html'"
+    >
+        ←
+    </button>
+
+
+    <!-- PERFIL -->
+
+    <div class="cabecera">
+
+        <div class="avatar">
+
+            <img
+                id="avatarPerfil"
+                src="avatar-1.png"
+                alt="Avatar"
+            >
+
+        </div>
+
+
+        <div
+            class="nombre"
+            id="nombrePerfil"
+        >
+            Mi Basketball Passport
+        </div>
+
+
+        <div
+            class="ubicacion"
+            id="ciudadPerfil"
+        >
+            📍 Agrega tu ciudad
+        </div>
+
+
+        <div
+            class="miembro"
+            id="miembroDesde"
+        ></div>
+
+    </div>
+
+
+    <!-- FRASE -->
+
+    <div
+        class="frase"
+        id="frasePerfil"
+    >
+        “Every court tells a story.”
+    </div>
+
+
+    <!-- ESTADÍSTICAS -->
+
+    <div class="estadisticas">
+
+        <div class="estadistica">
+
+            <div
+                class="estadistica-numero"
+                id="totalCanchas"
+            >
+                0
+            </div>
+
+            <div class="estadistica-texto">
+                Canchas
+            </div>
+
+        </div>
+
+
+        <div class="estadistica">
+
+            <div
+                class="estadistica-numero"
+                id="totalPartidos"
+            >
+                0
+            </div>
+
+            <div class="estadistica-texto">
+                Partidos
+            </div>
+
+        </div>
+
+
+        <div class="estadistica">
+
+            <div
+                class="estadistica-numero"
+                id="totalVictorias"
+            >
+                0
+            </div>
+
+            <div class="estadistica-texto">
+                Victorias
+            </div>
+
+        </div>
+
+
+        <div class="estadistica">
+
+            <div
+                class="estadistica-numero"
+                id="totalPuntos"
+            >
+                0
+            </div>
+
+            <div class="estadistica-texto">
+                Puntos
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- LOGRO -->
+
+    <div class="logro">
+
+        <div
+            class="logro-icono"
+            id="logroIcono"
+        >
+            🏀
+        </div>
+
+        <div>
+
+            <div class="logro-etiqueta">
+                LOGRO DESTACADO
+            </div>
+
+            <div
+                class="logro-nombre"
+                id="logroNombre"
+            >
+                El viaje comienza
+            </div>
+
+            <div
+                class="logro-detalle"
+                id="logroDetalle"
+            >
+                Agrega tu primera cancha.
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <button
+        class="editar"
+        id="editarPerfil"
+        type="button"
+    >
+        ✏️ EDITAR PERFIL
+    </button>
+
+</div>
+
+
+<!-- MODAL EDITAR -->
+
+<div
+    class="modal-fondo"
+    id="modalPerfil"
+>
+
+    <div class="modal">
+
+
+        <div class="modal-cabecera">
+
+            <div class="modal-titulo">
+                Editar perfil
+            </div>
+
+            <button
+                class="cerrar"
+                id="cerrarModal"
+                type="button"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <!-- AVATARES -->
+
+        <div class="titulo-avatar">
+            Elige tu avatar
+        </div>
+
+
+        <div class="avatares">
+
+
+            <div
+                class="avatar-opcion"
+                data-avatar="avatar-1.png"
+            >
+                <img src="avatar-1.png">
+            </div>
+
+
+            <div
+                class="avatar-opcion"
+                data-avatar="avatar-2.png"
+            >
+                <img src="avatar-2.png">
+            </div>
+
+
+            <div
+                class="avatar-opcion"
+                data-avatar="avatar-3.png"
+            >
+                <img src="avatar-3.png">
+            </div>
+
+
+            <div
+                class="avatar-opcion"
+                data-avatar="avatar-4.png"
+            >
+                <img src="avatar-4.png">
+            </div>
+
+
+            <div
+                class="avatar-opcion"
+                data-avatar="avatar-5.png"
+            >
+                <img src="avatar-5.png">
+            </div>
+
+
+        </div>
+
+
+        <!-- NOMBRE -->
+
+        <div class="campo">
+
+            <label>
+                Nombre
+            </label>
+
+            <input
+                id="inputNombre"
+                type="text"
+                placeholder="Tu nombre"
+            >
+
+        </div>
+
+
+        <!-- CIUDAD -->
+
+        <div class="campo">
+
+            <label>
+                Ciudad
+            </label>
+
+            <input
+                id="inputCiudad"
+                type="text"
+                placeholder="Ej. Caracas, Venezuela"
+            >
+
+        </div>
+
+
+        <!-- FRASE -->
+
+        <div class="campo">
+
+            <label>
+                Tu frase
+            </label>
+
+            <textarea
+                id="inputFrase"
+                placeholder="Escribe una frase para tu pasaporte..."
+            ></textarea>
+
+        </div>
+
+
+        <button
+            class="guardar"
+            id="guardarPerfil"
+            type="button"
+        >
+            GUARDAR PERFIL
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =========================
+   PERFIL
+========================= */
+
+let perfil =
+    JSON.parse(
+        localStorage.getItem(
+            "perfilBasketballPassport"
+        )
+    ) || {};
+
+
+/* AVATAR POR DEFECTO */
+
+if (!perfil.avatar){
+
+    perfil.avatar =
+        "avatar-1.png";
+
+}
+
+
+/* FECHA CREACIÓN */
+
+if (!perfil.fechaCreacion){
+
+    perfil.fechaCreacion =
+        new Date()
+            .toISOString()
+            .split("T")[0];
+
+}
+
+
+localStorage.setItem(
+    "perfilBasketballPassport",
+    JSON.stringify(perfil)
+);
+
+
+/* =========================
+   CANCHAS
+========================= */
+
+const canchas =
+    JSON.parse(
+        localStorage.getItem(
+            "canchasBasketballPassport"
+        )
+    ) || [];
+
+
+/* =========================
+   MOSTRAR PERFIL
+========================= */
+
+function mostrarPerfil(){
+
+
+    document.getElementById(
+        "avatarPerfil"
+    ).src =
+        perfil.avatar ||
+        "avatar-1.png";
+
+
+    document.getElementById(
+        "nombrePerfil"
+    ).textContent =
+        perfil.nombre ||
+        "Mi Basketball Passport";
+
+
+    document.getElementById(
+        "ciudadPerfil"
+    ).textContent =
+        perfil.ciudad
+        ?
+        "📍 " + perfil.ciudad
+        :
+        "📍 Agrega tu ciudad";
+
+
+    document.getElementById(
+        "frasePerfil"
+    ).textContent =
+        perfil.frase
+        ?
+        "“" + perfil.frase + "”"
+        :
+        "“Every court tells a story.”";
+
+
+    if (perfil.fechaCreacion){
+
+
+        const partes =
+            perfil.fechaCreacion.split("-");
+
+
+        const fecha =
+            new Date(
+                Number(partes[0]),
+                Number(partes[1]) - 1,
+                Number(partes[2])
+            );
+
+
+        const textoFecha =
+            fecha.toLocaleDateString(
+                "es-ES",
+                {
+                    month:"long",
+                    year:"numeric"
+                }
+            );
+
+
+        document.getElementById(
+            "miembroDesde"
+        ).textContent =
+            "Pasaporte creado en " +
+            textoFecha;
+
+    }
+
+}
+
+
+/* =========================
+   ESTADÍSTICAS
+========================= */
+
+function cargarEstadisticas(){
+
+
+    let partidos = 0;
+    let victorias = 0;
+    let puntos = 0;
+
+
+    canchas.forEach(
+        function(cancha){
+
+
+            partidos +=
+                Number(
+                    cancha.partidos || 0
+                );
+
+
+            victorias +=
+                Number(
+                    cancha.victorias || 0
+                );
+
+
+            puntos +=
+                Number(
+                    cancha.puntos || 0
+                );
+
+        }
+    );
+
+
+    document.getElementById(
+        "totalCanchas"
+    ).textContent =
+        canchas.length;
+
+
+    document.getElementById(
+        "totalPartidos"
+    ).textContent =
+        partidos;
+
+
+    document.getElementById(
+        "totalVictorias"
+    ).textContent =
+        victorias;
+
+
+    document.getElementById(
+        "totalPuntos"
+    ).textContent =
+        puntos;
+
+
+    actualizarLogro(
+        canchas.length,
+        victorias,
+        puntos
+    );
+
+}
+
+
+/* =========================
+   LOGRO DESTACADO
+========================= */
+
+function actualizarLogro(
+    totalCanchas,
+    victorias,
+    puntos
+){
+
+
+    let icono =
+        "🏀";
+
+    let nombre =
+        "El viaje comienza";
+
+    let detalle =
+        "Agrega tu primera cancha.";
+
+
+    if (totalCanchas >= 1){
+
+        icono =
+            "🏀";
+
+        nombre =
+            "Primera cancha";
+
+        detalle =
+            "Tu Basketball Passport ya está en marcha.";
+
+    }
+
+
+    if (totalCanchas >= 5){
+
+        icono =
+            "🗺️";
+
+        nombre =
+            "Explorador";
+
+        detalle =
+            "Ya visitaste 5 canchas.";
+
+    }
+
+
+    if (puntos >= 100){
+
+        icono =
+            "🔥";
+
+        nombre =
+            "100 puntos";
+
+        detalle =
+            "Superaste los 100 puntos registrados.";
+
+    }
+
+
+    if (victorias >= 10){
+
+        icono =
+            "🏆";
+
+        nombre =
+            "10 victorias";
+
+        detalle =
+            "Ya alcanzaste 10 victorias.";
+
+    }
+
+
+    document.getElementById(
+        "logroIcono"
+    ).textContent =
+        icono;
+
+
+    document.getElementById(
+        "logroNombre"
+    ).textContent =
+        nombre;
+
+
+    document.getElementById(
+        "logroDetalle"
+    ).textContent =
+        detalle;
+
+}
+
+
+/* =========================
+   MODAL
+========================= */
+
+const modal =
+    document.getElementById(
+        "modalPerfil"
+    );
+
+
+let avatarSeleccionado =
+    perfil.avatar ||
+    "avatar-1.png";
+
+
+/* ABRIR */
+
+document.getElementById(
+    "editarPerfil"
+).onclick =
+    function(){
+
+
+        avatarSeleccionado =
+            perfil.avatar ||
+            "avatar-1.png";
+
+
+        document.getElementById(
+            "inputNombre"
+        ).value =
+            perfil.nombre || "";
+
+
+        document.getElementById(
+            "inputCiudad"
+        ).value =
+            perfil.ciudad || "";
+
+
+        document.getElementById(
+            "inputFrase"
+        ).value =
+            perfil.frase || "";
+
+
+        marcarAvatar();
+
+
+        modal.classList.add(
+            "abierto"
+        );
+
+    };
+
+
+/* CERRAR */
+
+document.getElementById(
+    "cerrarModal"
+).onclick =
+    function(){
+
+        modal.classList.remove(
+            "abierto"
+        );
+
+    };
+
+
+modal.addEventListener(
+    "click",
+    function(event){
+
+        if (event.target === modal){
+
+            modal.classList.remove(
+                "abierto"
+            );
+
+        }
+
+    }
+);
+
+
+/* =========================
+   ELEGIR AVATAR
+========================= */
+
+const opcionesAvatar =
+    document.querySelectorAll(
+        ".avatar-opcion"
+    );
+
+
+opcionesAvatar.forEach(
+    function(opcion){
+
+
+        opcion.onclick =
+            function(){
+
+
+                avatarSeleccionado =
+                    this.dataset.avatar;
+
+
+                marcarAvatar();
+
+            };
+
+    }
+);
+
+
+function marcarAvatar(){
+
+
+    opcionesAvatar.forEach(
+        function(opcion){
+
+
+            if (
+                opcion.dataset.avatar ===
+                avatarSeleccionado
+            ){
+
+                opcion.classList.add(
+                    "seleccionado"
+                );
+
+            } else {
+
+                opcion.classList.remove(
+                    "seleccionado"
+                );
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =========================
+   GUARDAR
+========================= */
+
+document.getElementById(
+    "guardarPerfil"
+).onclick =
+    function(){
+
+
+        perfil.nombre =
+            document.getElementById(
+                "inputNombre"
+            ).value.trim();
+
+
+        perfil.ciudad =
+            document.getElementById(
+                "inputCiudad"
+            ).value.trim();
+
+
+        perfil.frase =
+            document.getElementById(
+                "inputFrase"
+            ).value.trim();
+
+
+        perfil.avatar =
+            avatarSeleccionado;
+
+
+        localStorage.setItem(
+
+            "perfilBasketballPassport",
+
+            JSON.stringify(perfil)
+
+        );
+
+
+        mostrarPerfil();
+
+
+        modal.classList.remove(
+            "abierto"
+        );
+
+    };
+
+
+/* =========================
+   INICIAR
+========================= */
+
+mostrarPerfil();
+
+cargarEstadisticas();
+
+</script>
+
+</body>
+</html>
