@@ -388,13 +388,6 @@ if (
    FOTO PRIVADA
 ========================= */
 
-/*
-   Ya NO guardaremos una URL pública.
-
-   Guardaremos el nombre/ruta real del archivo
-   dentro del bucket privado fotos-canchas.
-*/
-
 let fotoPath = "";
 
 let subiendoFoto = false;
@@ -488,13 +481,6 @@ document.getElementById(
 
         }
 
-
-        /*
-           data.path es lo importante.
-
-           Ejemplo:
-           1790217071152-foto.jpg
-        */
 
         fotoPath =
             data.path;
@@ -642,14 +628,6 @@ botonGuardar.addEventListener(
                     "recuerdo"
                 ).value.trim(),
 
-
-            /*
-               Dejamos foto por compatibilidad
-               con las canchas antiguas.
-
-               Las nuevas usarán fotoPath.
-            */
-
             foto:
                 "",
 
@@ -667,9 +645,21 @@ botonGuardar.addEventListener(
             ) || [];
 
 
+        /* =========================
+           COMPROBAR NUEVO LOGRO
+        ========================= */
+
+        const cantidadAnterior =
+            canchas.length;
+
+
         canchas.push(
             nuevaCancha
         );
+
+
+        const cantidadNueva =
+            canchas.length;
 
 
         localStorage.setItem(
@@ -681,6 +671,41 @@ botonGuardar.addEventListener(
             )
 
         );
+
+
+        /*
+           Si esta cancha hizo que pasáramos
+           de menos de 5 a 5 o más,
+           dejamos pendiente la celebración.
+        */
+
+        if (
+            cantidadAnterior < 5 &&
+            cantidadNueva >= 5
+        ) {
+
+            const logrosCelebrados =
+                JSON.parse(
+                    localStorage.getItem(
+                        "logrosCelebradosBasketballPassport"
+                    )
+                ) || [];
+
+
+            if (
+                !logrosCelebrados.includes(
+                    "explorador5"
+                )
+            ) {
+
+                localStorage.setItem(
+                    "celebracionPendienteBasketballPassport",
+                    "explorador5"
+                );
+
+            }
+
+        }
 
 
         localStorage.removeItem(
