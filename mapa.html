@@ -34,7 +34,10 @@ html, body{
     z-index:1;
 }
 
-/* BOTÓN BALÓN */
+
+/* =========================
+   BOTÓN BALÓN
+========================= */
 
 #menuButton{
     position:fixed;
@@ -54,7 +57,10 @@ html, body{
     z-index:2000;
 }
 
-/* MENÚ */
+
+/* =========================
+   MENÚ
+========================= */
 
 #sideMenu{
     position:fixed;
@@ -103,7 +109,10 @@ html, body{
     font-size:22px;
 }
 
-/* OVERLAY */
+
+/* =========================
+   OVERLAY MENÚ
+========================= */
 
 #overlay{
     position:fixed;
@@ -120,14 +129,20 @@ html, body{
     display:block;
 }
 
-/* BALONES */
+
+/* =========================
+   BALONES
+========================= */
 
 .basketball-marker{
     font-size:31px;
     filter:drop-shadow(0 2px 3px rgba(0,0,0,.35));
 }
 
-/* POPUP */
+
+/* =========================
+   POPUP
+========================= */
 
 .popup-cancha{
     width:220px;
@@ -171,6 +186,294 @@ html, body{
     cursor:pointer;
 }
 
+
+/* =====================================================
+   CELEBRACIÓN DE LOGRO
+===================================================== */
+
+#celebracionLogro{
+    position:fixed;
+    inset:0;
+    z-index:10000;
+
+    display:none;
+    align-items:center;
+    justify-content:center;
+
+    overflow:hidden;
+
+    background:rgba(0,0,0,0);
+
+    transition:
+        background .45s ease;
+}
+
+
+#celebracionLogro.activa{
+    display:flex;
+}
+
+
+#celebracionLogro.fondo{
+    background:rgba(0,0,0,.32);
+}
+
+
+/* CONTENIDO CENTRAL */
+
+.logro-contenido{
+    position:relative;
+
+    z-index:3;
+
+    width:90%;
+    max-width:430px;
+
+    text-align:center;
+
+    color:white;
+
+    pointer-events:none;
+}
+
+
+/* STICKER */
+
+.logro-sticker{
+    font-size:105px;
+
+    line-height:1;
+
+    opacity:0;
+
+    transform:
+        scale(.05)
+        rotate(-18deg);
+
+    filter:
+        drop-shadow(
+            0 10px 10px
+            rgba(0,0,0,.28)
+        );
+}
+
+
+.logro-sticker.pegando{
+    animation:
+        pegarSticker
+        .72s
+        cubic-bezier(.18,.89,.32,1.35)
+        forwards;
+}
+
+
+.logro-sticker.despegando{
+    animation:
+        despegarSticker
+        .65s
+        ease-in
+        forwards;
+}
+
+
+@keyframes pegarSticker{
+
+    0%{
+        opacity:0;
+        transform:
+            scale(.05)
+            rotate(-18deg);
+    }
+
+    55%{
+        opacity:1;
+        transform:
+            scale(1.28)
+            rotate(5deg);
+    }
+
+    75%{
+        transform:
+            scale(.92)
+            rotate(-2deg);
+    }
+
+    100%{
+        opacity:1;
+        transform:
+            scale(1)
+            rotate(0deg);
+    }
+
+}
+
+
+@keyframes despegarSticker{
+
+    0%{
+        opacity:1;
+        transform:
+            scale(1)
+            rotate(0deg);
+    }
+
+    35%{
+        transform:
+            scale(1.08)
+            rotate(-5deg);
+    }
+
+    100%{
+        opacity:0;
+        transform:
+            scale(.15)
+            rotate(22deg)
+            translateY(-80px);
+    }
+
+}
+
+
+/* TEXTO */
+
+.logro-textos{
+    margin-top:22px;
+
+    opacity:0;
+
+    transform:
+        translateY(15px);
+
+    transition:
+        opacity .45s ease,
+        transform .45s ease;
+}
+
+
+.logro-textos.visible{
+    opacity:1;
+
+    transform:
+        translateY(0);
+}
+
+
+.logro-nuevo{
+    font-size:14px;
+    font-weight:bold;
+
+    letter-spacing:3px;
+
+    margin-bottom:10px;
+}
+
+
+.logro-titulo{
+    font-size:32px;
+    font-weight:900;
+
+    letter-spacing:1px;
+
+    margin-bottom:8px;
+}
+
+
+.logro-descripcion{
+    font-size:18px;
+    font-weight:bold;
+}
+
+
+/* =========================
+   CONFETI
+========================= */
+
+.confeti{
+    position:absolute;
+
+    width:9px;
+    height:15px;
+
+    border-radius:2px;
+
+    opacity:0;
+
+    z-index:2;
+
+    pointer-events:none;
+
+    animation:
+        caerConfeti
+        var(--duracion)
+        cubic-bezier(.2,.7,.3,1)
+        forwards;
+
+    animation-delay:
+        var(--retraso);
+}
+
+
+@keyframes caerConfeti{
+
+    0%{
+        opacity:0;
+
+        transform:
+            translate(
+                0,
+                0
+            )
+            rotate(0deg);
+    }
+
+    10%{
+        opacity:1;
+    }
+
+    35%{
+        transform:
+            translate(
+                var(--x-medio),
+                var(--y-subida)
+            )
+            rotate(240deg);
+    }
+
+    100%{
+        opacity:0;
+
+        transform:
+            translate(
+                var(--x-final),
+                110vh
+            )
+            rotate(760deg);
+    }
+
+}
+
+
+/* RESPETO A REDUCIR MOVIMIENTO */
+
+@media (prefers-reduced-motion: reduce){
+
+    .logro-sticker.pegando{
+        animation:none;
+        opacity:1;
+        transform:none;
+    }
+
+    .logro-sticker.despegando{
+        animation:none;
+        opacity:0;
+    }
+
+    .confeti{
+        display:none;
+    }
+
+}
+
 </style>
 
 </head>
@@ -180,6 +483,49 @@ html, body{
 <div id="map"></div>
 
 <div id="overlay"></div>
+
+
+<!-- =========================
+     CELEBRACIÓN
+========================= -->
+
+<div
+    id="celebracionLogro"
+    aria-hidden="true"
+>
+
+    <div class="logro-contenido">
+
+        <div
+            class="logro-sticker"
+            id="logroSticker"
+        >
+            🗺️
+        </div>
+
+
+        <div
+            class="logro-textos"
+            id="logroTextos"
+        >
+
+            <div class="logro-nuevo">
+                ¡NUEVO LOGRO!
+            </div>
+
+            <div class="logro-titulo">
+                EXPLORADOR
+            </div>
+
+            <div class="logro-descripcion">
+                5 canchas visitadas
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
 
 
 <!-- MENÚ -->
@@ -538,7 +884,14 @@ async function cargarCanchas() {
 
         /* FOTO PRIVADA */
 
-        if (cancha.fotoRuta) {
+        if (
+            cancha.fotoPath ||
+            cancha.fotoRuta
+        ) {
+
+            const rutaFoto =
+                cancha.fotoPath ||
+                cancha.fotoRuta;
 
 
             const {
@@ -553,7 +906,7 @@ async function cargarCanchas() {
 
                     .createSignedUrl(
 
-                        cancha.fotoRuta,
+                        rutaFoto,
 
                         3600
 
@@ -603,6 +956,11 @@ async function cargarCanchas() {
         }
 
     }
+
+
+    /* DESPUÉS DE CARGAR EL MAPA */
+
+    comprobarCelebracionPendiente();
 
 }
 
@@ -871,6 +1229,501 @@ agregarCancha.onclick =
         );
 
     };
+
+
+/* =====================================================
+   CELEBRACIÓN DE LOGRO
+===================================================== */
+
+function comprobarCelebracionPendiente() {
+
+    const pendiente =
+        localStorage.getItem(
+            "celebracionPendienteBasketballPassport"
+        );
+
+
+    if (
+        pendiente !==
+        "explorador5"
+    ) {
+
+        return;
+
+    }
+
+
+    let celebrados =
+        JSON.parse(
+            localStorage.getItem(
+                "logrosCelebradosBasketballPassport"
+            )
+        ) || [];
+
+
+    if (
+        celebrados.includes(
+            "explorador5"
+        )
+    ) {
+
+        localStorage.removeItem(
+            "celebracionPendienteBasketballPassport"
+        );
+
+        return;
+
+    }
+
+
+    /*
+       Esperamos un poquito para que
+       primero aparezca el mapa.
+    */
+
+    setTimeout(
+
+        function() {
+
+            mostrarCelebracionExplorador();
+
+        },
+
+        650
+
+    );
+
+}
+
+
+/* =========================
+   MOSTRAR CELEBRACIÓN
+========================= */
+
+function mostrarCelebracionExplorador() {
+
+    const celebracion =
+        document.getElementById(
+            "celebracionLogro"
+        );
+
+    const sticker =
+        document.getElementById(
+            "logroSticker"
+        );
+
+    const textos =
+        document.getElementById(
+            "logroTextos"
+        );
+
+
+    celebracion.classList.add(
+        "activa"
+    );
+
+    celebracion.setAttribute(
+        "aria-hidden",
+        "false"
+    );
+
+
+    /*
+       Forzamos un nuevo frame antes
+       de oscurecer el fondo.
+    */
+
+    requestAnimationFrame(
+
+        function() {
+
+            requestAnimationFrame(
+
+                function() {
+
+                    celebracion.classList.add(
+                        "fondo"
+                    );
+
+                }
+
+            );
+
+        }
+
+    );
+
+
+    /* CONFETI */
+
+    crearConfeti();
+
+
+    /* PEGAR STICKER */
+
+    setTimeout(
+
+        function() {
+
+            sticker.classList.add(
+                "pegando"
+            );
+
+        },
+
+        250
+
+    );
+
+
+    /* MOSTRAR TEXTO */
+
+    setTimeout(
+
+        function() {
+
+            textos.classList.add(
+                "visible"
+            );
+
+        },
+
+        850
+
+    );
+
+
+    /* DESPEGAR STICKER */
+
+    setTimeout(
+
+        function() {
+
+            textos.classList.remove(
+                "visible"
+            );
+
+            sticker.classList.remove(
+                "pegando"
+            );
+
+            sticker.classList.add(
+                "despegando"
+            );
+
+        },
+
+        3400
+
+    );
+
+
+    /* QUITAR FONDO */
+
+    setTimeout(
+
+        function() {
+
+            celebracion.classList.remove(
+                "fondo"
+            );
+
+        },
+
+        3800
+
+    );
+
+
+    /* TERMINAR */
+
+    setTimeout(
+
+        function() {
+
+            celebracion.classList.remove(
+                "activa"
+            );
+
+            celebracion.setAttribute(
+                "aria-hidden",
+                "true"
+            );
+
+
+            sticker.classList.remove(
+                "despegando"
+            );
+
+
+            /*
+               Marcamos el logro como
+               celebrado para que jamás
+               vuelva a salir.
+            */
+
+            let celebrados =
+                JSON.parse(
+                    localStorage.getItem(
+                        "logrosCelebradosBasketballPassport"
+                    )
+                ) || [];
+
+
+            if (
+                !celebrados.includes(
+                    "explorador5"
+                )
+            ) {
+
+                celebrados.push(
+                    "explorador5"
+                );
+
+            }
+
+
+            localStorage.setItem(
+
+                "logrosCelebradosBasketballPassport",
+
+                JSON.stringify(
+                    celebrados
+                )
+
+            );
+
+
+            localStorage.removeItem(
+                "celebracionPendienteBasketballPassport"
+            );
+
+
+            /*
+               Eliminamos cualquier confeti
+               restante del DOM.
+            */
+
+            celebracion
+                .querySelectorAll(
+                    ".confeti"
+                )
+                .forEach(
+                    function(elemento) {
+
+                        elemento.remove();
+
+                    }
+                );
+
+        },
+
+        4400
+
+    );
+
+}
+
+
+/* =========================
+   CREAR CONFETI
+========================= */
+
+function crearConfeti() {
+
+    const celebracion =
+        document.getElementById(
+            "celebracionLogro"
+        );
+
+
+    const colores = [
+
+        "#ff9f1c",
+        "#ffd166",
+        "#ffffff",
+        "#4cc9f0",
+        "#ef476f",
+        "#06d6a0"
+
+    ];
+
+
+    /*
+       28 piezas en total:
+       14 desde cada lado.
+    */
+
+    const cantidadPorLado =
+        14;
+
+
+    for (
+        let lado = 0;
+        lado < 2;
+        lado++
+    ) {
+
+        for (
+            let i = 0;
+            i < cantidadPorLado;
+            i++
+        ) {
+
+            const pieza =
+                document.createElement(
+                    "div"
+                );
+
+
+            pieza.className =
+                "confeti";
+
+
+            const desdeIzquierda =
+                lado === 0;
+
+
+            pieza.style.left =
+                desdeIzquierda
+                ?
+                "-10px"
+                :
+                "calc(100% + 10px)";
+
+
+            /*
+               Salen principalmente desde
+               la zona media/baja.
+            */
+
+            pieza.style.top =
+                (
+                    42 +
+                    Math.random() * 35
+                ) +
+                "%";
+
+
+            pieza.style.background =
+                colores[
+                    Math.floor(
+                        Math.random() *
+                        colores.length
+                    )
+                ];
+
+
+            const movimientoMedio =
+                70 +
+                Math.random() * 120;
+
+
+            const movimientoFinal =
+                120 +
+                Math.random() * 180;
+
+
+            pieza.style.setProperty(
+
+                "--x-medio",
+
+                (
+                    desdeIzquierda
+                    ?
+                    movimientoMedio
+                    :
+                    -movimientoMedio
+                ) +
+                "px"
+
+            );
+
+
+            pieza.style.setProperty(
+
+                "--x-final",
+
+                (
+                    desdeIzquierda
+                    ?
+                    movimientoFinal
+                    :
+                    -movimientoFinal
+                ) +
+                "px"
+
+            );
+
+
+            pieza.style.setProperty(
+
+                "--y-subida",
+
+                (
+                    -80 -
+                    Math.random() * 220
+                ) +
+                "px"
+
+            );
+
+
+            pieza.style.setProperty(
+
+                "--duracion",
+
+                (
+                    2.4 +
+                    Math.random() * 1.1
+                ) +
+                "s"
+
+            );
+
+
+            pieza.style.setProperty(
+
+                "--retraso",
+
+                (
+                    Math.random() * .55
+                ) +
+                "s"
+
+            );
+
+
+            /*
+               Algunas piezas cuadradas,
+               otras un poco alargadas.
+            */
+
+            pieza.style.width =
+                (
+                    6 +
+                    Math.random() * 5
+                ) +
+                "px";
+
+
+            pieza.style.height =
+                (
+                    9 +
+                    Math.random() * 9
+                ) +
+                "px";
+
+
+            celebracion.appendChild(
+                pieza
+            );
+
+        }
+
+    }
+
+}
 
 
 /* =========================
