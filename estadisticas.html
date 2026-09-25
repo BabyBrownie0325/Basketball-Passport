@@ -259,6 +259,76 @@ h1{
     padding:8px 0 20px;
 }
 
+
+/* =========================
+   SALA DE TROFEOS
+========================= */
+
+.boton-trofeos{
+    display:flex;
+    align-items:center;
+    gap:16px;
+
+    width:100%;
+
+    background:white;
+
+    border-radius:20px;
+
+    padding:20px;
+
+    margin-top:18px;
+
+    box-shadow:0 3px 15px rgba(0,0,0,.05);
+
+    color:#222;
+    text-decoration:none;
+
+    transition:
+        transform .15s ease,
+        box-shadow .15s ease;
+}
+
+.boton-trofeos:active{
+    transform:scale(.98);
+}
+
+.boton-trofeos-icono{
+    width:55px;
+    height:55px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:16px;
+
+    background:#f4f4f4;
+
+    font-size:32px;
+}
+
+.boton-trofeos-contenido{
+    flex:1;
+}
+
+.boton-trofeos-titulo{
+    font-size:17px;
+    font-weight:bold;
+    margin-bottom:4px;
+}
+
+.boton-trofeos-texto{
+    font-size:13px;
+    color:#777;
+}
+
+.boton-trofeos-flecha{
+    font-size:27px;
+    color:#aaa;
+}
+
+
 @media(max-width:500px){
 
     h1{
@@ -608,6 +678,39 @@ h1{
         </div>
 
     </div>
+
+
+    <!-- =========================
+         SALA DE TROFEOS
+    ========================= -->
+
+    <a
+        href="trofeos.html"
+        class="boton-trofeos"
+    >
+
+        <div class="boton-trofeos-icono">
+            🏆
+        </div>
+
+        <div class="boton-trofeos-contenido">
+
+            <div class="boton-trofeos-titulo">
+                Sala de trofeos
+            </div>
+
+            <div class="boton-trofeos-texto">
+                Mira los trofeos que has conseguido
+            </div>
+
+        </div>
+
+        <div class="boton-trofeos-flecha">
+            ›
+        </div>
+
+    </a>
+
 
 </div>
 
