@@ -1,297 +1,465 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Editar cancha | Basketball Passport</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+<title>Basketball Passport</title>
 
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f5f5f5;
-            color: #222;
-        }
+<link rel="stylesheet"
+href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 
-        .contenedor {
-            max-width: 520px;
-            margin: auto;
-            padding: 22px;
-            padding-bottom: 50px;
-        }
+<style>
 
-        .volver {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: white;
-            text-decoration: none;
-            color: #222;
-            font-size: 24px;
-            margin-bottom: 18px;
-        }
+*{ box-sizing:border-box; }
 
-        h1 {
-            margin: 0 0 8px;
-            font-size: 30px;
-        }
+html, body{
+    margin:0;
+    padding:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    font-family:Arial, sans-serif;
+}
 
-        .subtitulo {
-            color: #777;
-            margin-bottom: 28px;
-        }
+#map{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    z-index:1;
+}
 
-        .foto {
-            height: 190px;
-            background: #e8e8e8;
-            border-radius: 18px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 25px;
-            font-size: 42px;
-            overflow: hidden;
-            cursor: pointer;
-        }
+#menuButton{
+    position:fixed;
+    top:20px;
+    left:20px;
+    width:55px;
+    height:55px;
+    border:none;
+    border-radius:50%;
+    background:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:32px;
+    box-shadow:0 3px 12px rgba(0,0,0,.30);
+    cursor:pointer;
+    z-index:2000;
+}
 
-        .foto span {
-            font-size: 14px;
-            margin-top: 10px;
-            color: #666;
-        }
+#sideMenu{
+    position:fixed;
+    top:0;
+    left:-78%;
+    width:75%;
+    max-width:330px;
+    height:100%;
+    background:#f5f5f2;
+    z-index:1900;
+    transition:left .30s ease;
+    box-shadow:4px 0 18px rgba(0,0,0,.25);
+    padding:95px 22px 30px;
+}
 
-        #previewFoto {
-            display: none;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+#sideMenu.open{ left:0; }
 
-        #textoFoto {
-            text-align: center;
-        }
+.menu-title{
+    font-size:20px;
+    font-weight:bold;
+    margin-bottom:6px;
+}
 
-        label {
-            display: block;
-            font-weight: bold;
-            margin: 18px 0 7px;
-        }
+.menu-subtitle{
+    font-size:13px;
+    color:#777;
+    margin-bottom:30px;
+}
 
-        input,
-        textarea,
-        select {
-            width: 100%;
-            border: 1px solid #ddd;
-            background: white;
-            border-radius: 12px;
-            padding: 14px;
-            font-size: 16px;
-        }
+.menu-item{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    padding:15px 5px;
+    color:#222;
+    text-decoration:none;
+    font-size:16px;
+    border-bottom:1px solid #ddd;
+}
 
-        textarea {
-            min-height: 110px;
-            resize: vertical;
-        }
+.menu-icon{
+    width:30px;
+    text-align:center;
+    font-size:22px;
+}
 
-        .fila {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
+#overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.25);
+    z-index:1800;
+    display:none;
+}
 
-        .guardar {
-            width: 100%;
-            margin-top: 28px;
-            padding: 16px;
-            border: none;
-            border-radius: 12px;
-            background: #222;
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-        }
+#overlay.show{ display:block; }
 
-        .eliminar {
-            width: 100%;
-            margin-top: 12px;
-            padding: 15px;
-            border: 1px solid #d6d6d6;
-            border-radius: 12px;
-            background: white;
-            color: #b42318;
-            font-size: 15px;
-            font-weight: bold;
-            cursor: pointer;
-        }
+.basketball-marker{
+    font-size:31px;
+    filter:drop-shadow(0 2px 3px rgba(0,0,0,.35));
+}
 
-    </style>
+.popup-cancha{
+    width:220px;
+    font-family:Arial,sans-serif;
+}
+
+.popup-foto{
+    width:100%;
+    height:125px;
+    object-fit:cover;
+    border-radius:10px;
+    margin-bottom:10px;
+    display:block;
+}
+
+.popup-nombre{
+    font-size:17px;
+    font-weight:bold;
+    margin-bottom:5px;
+}
+
+.popup-ubicacion{
+    font-size:13px;
+    color:#666;
+    margin-bottom:8px;
+}
+
+.popup-estrellas{
+    font-size:16px;
+    margin-bottom:11px;
+}
+
+.popup-boton{
+    width:100%;
+    border:none;
+    border-radius:8px;
+    padding:10px;
+    background:#222;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+
+/* =========================
+   LOGROS
+========================= */
+
+#celebracionLogro{
+    position:fixed;
+    inset:0;
+    z-index:10000;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    pointer-events:none;
+    background:rgba(0,0,0,0);
+    transition:background .45s ease;
+}
+
+#celebracionLogro.activa{
+    display:flex;
+}
+
+#celebracionLogro.fondo{
+    background:rgba(0,0,0,.32);
+}
+
+.logro-contenido{
+    position:relative;
+    z-index:5;
+    width:90%;
+    max-width:430px;
+    text-align:center;
+    color:white;
+}
+
+.logro-sticker{
+    font-size:108px;
+    line-height:1;
+    opacity:0;
+    transform:scale(.05) rotate(-18deg);
+    filter:drop-shadow(0 10px 10px rgba(0,0,0,.28));
+}
+
+.logro-sticker.pegando{
+    animation:
+        pegarSticker
+        .75s
+        cubic-bezier(.18,.89,.32,1.35)
+        forwards;
+}
+
+.logro-sticker.despegando{
+    animation:
+        despegarSticker
+        .7s
+        ease-in
+        forwards;
+}
+
+@keyframes pegarSticker{
+
+    0%{
+        opacity:0;
+        transform:scale(.05) rotate(-18deg);
+    }
+
+    55%{
+        opacity:1;
+        transform:scale(1.28) rotate(5deg);
+    }
+
+    75%{
+        transform:scale(.92) rotate(-2deg);
+    }
+
+    100%{
+        opacity:1;
+        transform:scale(1) rotate(0);
+    }
+}
+
+@keyframes despegarSticker{
+
+    0%{
+        opacity:1;
+        transform:scale(1) rotate(0);
+    }
+
+    35%{
+        transform:scale(1.08) rotate(-5deg);
+    }
+
+    100%{
+        opacity:0;
+        transform:
+            scale(.15)
+            rotate(22deg)
+            translateY(-80px);
+    }
+}
+
+.logro-textos{
+    margin-top:22px;
+    opacity:0;
+    transform:translateY(15px);
+    transition:
+        opacity .45s ease,
+        transform .45s ease;
+}
+
+.logro-textos.visible{
+    opacity:1;
+    transform:translateY(0);
+}
+
+.logro-nuevo{
+    font-size:14px;
+    font-weight:bold;
+    letter-spacing:3px;
+    margin-bottom:10px;
+}
+
+.logro-titulo{
+    font-size:32px;
+    font-weight:900;
+    letter-spacing:1px;
+    margin-bottom:8px;
+}
+
+.logro-descripcion{
+    font-size:18px;
+    font-weight:bold;
+}
+
+
+/* =========================
+   CONFETI
+========================= */
+
+.confeti{
+    position:absolute;
+    width:9px;
+    height:15px;
+    border-radius:2px;
+    opacity:0;
+    z-index:2;
+    animation:
+        caerConfeti
+        var(--duracion)
+        cubic-bezier(.2,.7,.3,1)
+        forwards;
+    animation-delay:var(--retraso);
+}
+
+@keyframes caerConfeti{
+
+    0%{
+        opacity:0;
+        transform:
+            translate(0,0)
+            rotate(0deg);
+    }
+
+    8%{
+        opacity:1;
+    }
+
+    35%{
+        opacity:1;
+        transform:
+            translate(
+                var(--x-medio),
+                var(--y-subida)
+            )
+            rotate(260deg);
+    }
+
+    100%{
+        opacity:0;
+        transform:
+            translate(
+                var(--x-final),
+                110vh
+            )
+            rotate(820deg);
+    }
+}
+
+</style>
+
 </head>
 
 <body>
 
-<div class="contenedor">
-
-    <a href="cancha.html" class="volver">←</a>
-
-    <h1>Editar cancha 🏀</h1>
-
-    <div class="subtitulo">
-        Guarda los recuerdos de esta cancha.
-    </div>
+<div id="map"></div>
+<div id="overlay"></div>
 
 
-    <!-- FOTO -->
+<div id="celebracionLogro">
 
-    <div
-        class="foto"
-        id="vistaFoto"
-        onclick="document.getElementById('fotoCancha').click()"
-    >
+    <div class="logro-contenido">
 
-        <img id="previewFoto">
+        <div
+            class="logro-sticker"
+            id="logroSticker">
+            🏀
+        </div>
 
-        <div id="textoFoto">
-            📷
-            <br>
-            <span>Agregar foto</span>
+        <div
+            class="logro-textos"
+            id="logroTextos">
+
+            <div class="logro-nuevo">
+                ¡NUEVO LOGRO!
+            </div>
+
+            <div
+                class="logro-titulo"
+                id="logroTitulo">
+            </div>
+
+            <div
+                class="logro-descripcion"
+                id="logroDescripcion">
+            </div>
+
         </div>
 
     </div>
-
-
-    <input
-        type="file"
-        id="fotoCancha"
-        accept="image/*"
-        style="display:none;"
-    >
-
-
-    <!-- DATOS -->
-
-    <label>Nombre de la cancha</label>
-
-    <input
-        id="nombre"
-        type="text"
-    >
-
-
-    <label>Ubicación</label>
-
-    <input
-        id="ubicacion"
-        type="text"
-    >
-
-
-    <label>Calificación</label>
-
-    <select id="estrellas">
-
-        <option value="5">⭐⭐⭐⭐⭐</option>
-        <option value="4">⭐⭐⭐⭐</option>
-        <option value="3">⭐⭐⭐</option>
-        <option value="2">⭐⭐</option>
-        <option value="1">⭐</option>
-
-    </select>
-
-
-    <label>Fecha de visita</label>
-
-    <input
-        id="fecha"
-        type="date"
-    >
-
-
-    <div class="fila">
-
-        <div>
-            <label>Partidos</label>
-            <input
-                id="partidos"
-                type="number"
-                min="0"
-            >
-        </div>
-
-        <div>
-            <label>Victorias</label>
-            <input
-                id="victorias"
-                type="number"
-                min="0"
-            >
-        </div>
-
-        <div>
-            <label>Derrotas</label>
-            <input
-                id="derrotas"
-                type="number"
-                min="0"
-            >
-        </div>
-
-        <div>
-            <label>Puntos</label>
-            <input
-                id="puntos"
-                type="number"
-                min="0"
-            >
-        </div>
-
-    </div>
-
-
-    <label>Mi recuerdo</label>
-
-    <textarea id="recuerdo"></textarea>
-
-
-    <button
-        class="guardar"
-        id="guardarCambios"
-        type="button"
-    >
-        GUARDAR CAMBIOS
-    </button>
-
-
-    <button
-        class="eliminar"
-        id="eliminarCancha"
-        type="button"
-    >
-        🗑 ELIMINAR CANCHA
-    </button>
 
 </div>
 
 
-<!-- SUPABASE -->
+<div id="sideMenu">
+
+    <div class="menu-title">
+        BASKETBALL PASSPORT
+    </div>
+
+    <div class="menu-subtitle">
+        Every court tells a story.
+    </div>
+
+    <a class="menu-item" href="perfil.html">
+        <span class="menu-icon">👤</span>
+        Mi perfil
+    </a>
+
+    <a class="menu-item" href="mis-canchas.html">
+        <span class="menu-icon">🏀</span>
+        Mis canchas
+    </a>
+
+    <a class="menu-item" href="estadisticas.html">
+        <span class="menu-icon">📊</span>
+        Partidos y estadísticas
+    </a>
+
+    <a
+        class="menu-item"
+        href="#"
+        id="galeriaPendiente">
+
+        <span class="menu-icon">📷</span>
+        Galería
+    </a>
+
+    <a
+        class="menu-item"
+        href="#"
+        id="agregarCancha">
+
+        <span class="menu-icon">➕</span>
+        Agregar cancha
+    </a>
+
+    <a
+        class="menu-item"
+        href="configuracion.html">
+
+        <span class="menu-icon">⚙️</span>
+        Configuración
+    </a>
+
+    <a
+        class="menu-item"
+        href="#"
+        id="cerrarSesion">
+
+        <span class="menu-icon">↪️</span>
+        Cerrar sesión
+    </a>
+
+</div>
+
+
+<button
+    id="menuButton"
+    type="button">
+    🏀
+</button>
+
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 
 <script>
-
-/* =========================
-   SUPABASE
-========================= */
 
 const SUPABASE_URL =
     "https://mybctirrilqkucnkaztx.supabase.co/";
@@ -307,385 +475,878 @@ const supabaseClient =
 
 
 /* =========================
-   BUSCAR CANCHA
+   MAPA
 ========================= */
 
-const canchaSeleccionada =
-    localStorage.getItem(
-        "canchaSeleccionada"
+const map =
+    L.map(
+        "map",
+        {
+            zoomControl:true,
+            minZoom:5,
+            maxZoom:18
+        }
+    ).setView(
+        [7.5,-66],
+        6
     );
 
 
-let canchas =
-    JSON.parse(
-        localStorage.getItem(
-            "canchasBasketballPassport"
-        )
-    ) || [];
+L.tileLayer(
+    "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+    {
+        maxZoom:18,
+        updateWhenIdle:true,
+        keepBuffer:2,
+        attribution:"© OpenStreetMap"
+    }
+).addTo(map);
 
 
-const indiceCancha =
-    canchas.findIndex(function(cancha) {
+/* =========================
+   ICONO
+========================= */
 
-        return String(cancha.id) ===
-               String(canchaSeleccionada);
+const basketballIcon =
+    L.divIcon({
 
+        className:"",
+
+        html:
+            '<div class="basketball-marker">🏀</div>',
+
+        iconSize:[40,40],
+
+        iconAnchor:[20,20]
     });
 
 
-if (indiceCancha === -1) {
-
-    alert("No se encontró esta cancha.");
-
-    window.location.href =
-        "mapa.html";
-
-}
-
-
-let datosCancha =
-    canchas[indiceCancha];
-
-
 /* =========================
-   CARGAR DATOS
+   ABRIR CANCHA
 ========================= */
 
-if (datosCancha) {
-
-    document.getElementById(
-        "nombre"
-    ).value =
-        datosCancha.nombre || "";
-
-
-    document.getElementById(
-        "ubicacion"
-    ).value =
-        datosCancha.ubicacion || "";
-
-
-    document.getElementById(
-        "estrellas"
-    ).value =
-        String(datosCancha.estrellas || 5);
-
-
-    document.getElementById(
-        "fecha"
-    ).value =
-        datosCancha.fecha || "";
-
-
-    document.getElementById(
-        "partidos"
-    ).value =
-        datosCancha.partidos || 0;
-
-
-    document.getElementById(
-        "victorias"
-    ).value =
-        datosCancha.victorias || 0;
-
-
-    document.getElementById(
-        "derrotas"
-    ).value =
-        datosCancha.derrotas || 0;
-
-
-    document.getElementById(
-        "puntos"
-    ).value =
-        datosCancha.puntos || 0;
-
-
-    document.getElementById(
-        "recuerdo"
-    ).value =
-        datosCancha.recuerdo || "";
-
-
-    /* FOTO EXISTENTE */
-
-    if (datosCancha.foto) {
-
-        const previewFoto =
-            document.getElementById(
-                "previewFoto"
-            );
-
-        previewFoto.src =
-            datosCancha.foto;
-
-        previewFoto.style.display =
-            "block";
-
-        document.getElementById(
-            "textoFoto"
-        ).style.display =
-            "none";
-
-    }
-
-}
-
-
-/* =========================
-   SUBIR FOTO
-========================= */
-
-document.getElementById(
-    "fotoCancha"
-).addEventListener(
-    "change",
-    async function() {
-
-
-        const archivo =
-            this.files[0];
-
-
-        if (!archivo) {
-            return;
-        }
-
-
-        const nombreArchivo =
-            Date.now() +
-            "-" +
-            archivo.name;
-
-
-        const {
-            data,
-            error
-        } =
-            await supabaseClient.storage
-
-                .from("fotos-canchas")
-
-                .upload(
-                    nombreArchivo,
-                    archivo
-                );
-
-
-        if (error) {
-
-            alert(
-                "No se pudo subir la foto: " +
-                error.message
-            );
-
-            return;
-
-        }
-
-
-        const { data: urlData } =
-            supabaseClient.storage
-
-                .from("fotos-canchas")
-
-                .getPublicUrl(
-                    nombreArchivo
-                );
-
-
-        /* Guardar URL en la cancha */
-
-        datosCancha.foto =
-            urlData.publicUrl;
-
-
-        /* Mostrar preview */
-
-        const previewFoto =
-            document.getElementById(
-                "previewFoto"
-            );
-
-
-        previewFoto.src =
-            URL.createObjectURL(
-                archivo
-            );
-
-
-        previewFoto.style.display =
-            "block";
-
-
-        document.getElementById(
-            "textoFoto"
-        ).style.display =
-            "none";
-
-
-        alert(
-            "¡Foto subida correctamente! 🏀📷"
-        );
-
-    }
-);
-
-
-/* =========================
-   GUARDAR CAMBIOS
-========================= */
-
-document.getElementById(
-    "guardarCambios"
-).onclick = function() {
-
-
-    datosCancha.nombre =
-        document.getElementById(
-            "nombre"
-        ).value.trim();
-
-
-    datosCancha.ubicacion =
-        document.getElementById(
-            "ubicacion"
-        ).value.trim();
-
-
-    datosCancha.estrellas =
-        Number(
-            document.getElementById(
-                "estrellas"
-            ).value
-        );
-
-
-    datosCancha.fecha =
-        document.getElementById(
-            "fecha"
-        ).value;
-
-
-    datosCancha.partidos =
-        Number(
-            document.getElementById(
-                "partidos"
-            ).value || 0
-        );
-
-
-    datosCancha.victorias =
-        Number(
-            document.getElementById(
-                "victorias"
-            ).value || 0
-        );
-
-
-    datosCancha.derrotas =
-        Number(
-            document.getElementById(
-                "derrotas"
-            ).value || 0
-        );
-
-
-    datosCancha.puntos =
-        Number(
-            document.getElementById(
-                "puntos"
-            ).value || 0
-        );
-
-
-    datosCancha.recuerdo =
-        document.getElementById(
-            "recuerdo"
-        ).value.trim();
-
-
-    /* Actualizar cancha */
-
-    canchas[indiceCancha] =
-        datosCancha;
-
-
-    /* Guardar */
+function abrirCancha(id) {
 
     localStorage.setItem(
-
-        "canchasBasketballPassport",
-
-        JSON.stringify(canchas)
-
+        "canchaSeleccionada",
+        id
     );
-
 
     window.location.href =
         "cancha.html";
-
-};
+}
 
 
 /* =========================
-   ELIMINAR CANCHA
+   POPUP
 ========================= */
 
-document.getElementById(
-    "eliminarCancha"
-).onclick = function() {
+function contenidoPopup(
+    cancha,
+    urlFoto = ""
+) {
+
+    let foto = "";
+
+    if (urlFoto) {
+
+        foto = `
+            <img
+                src="${urlFoto}"
+                class="popup-foto"
+                alt="Foto de la cancha"
+                onerror="this.style.display='none';">
+        `;
+    }
 
 
-    const confirmar =
-        window.confirm(
+    return `
 
-            "¿Seguro que quieres eliminar esta cancha?\n\n" +
+        <div class="popup-cancha">
 
-            "Esta acción no se puede deshacer."
+            ${foto}
 
+            <div class="popup-nombre">
+                ${cancha.nombre} 🏀
+            </div>
+
+            <div class="popup-ubicacion">
+                📍 ${cancha.ubicacion}
+            </div>
+
+            <div class="popup-estrellas">
+                ${"★".repeat(
+                    Number(
+                        cancha.estrellas || 0
+                    )
+                )}
+            </div>
+
+            <button
+                class="popup-boton"
+                onclick="abrirCancha('${cancha.id}')">
+                VER CANCHA →
+            </button>
+
+        </div>
+    `;
+}
+
+
+/* =========================
+   CARGAR CANCHAS
+========================= */
+
+async function cargarCanchas() {
+
+    const {
+        data: { session }
+    } =
+        await supabaseClient.auth
+            .getSession();
+
+
+    if (!session) {
+
+        window.location.replace(
+            "login.html"
         );
 
-
-    if (!confirmar) {
         return;
     }
 
 
-    /* Eliminar solamente esta cancha */
-
-    canchas =
-        canchas.filter(function(cancha) {
-
-            return String(cancha.id) !==
-                   String(canchaSeleccionada);
-
-        });
+    const canchas =
+        JSON.parse(
+            localStorage.getItem(
+                "canchasBasketballPassport"
+            )
+        ) || [];
 
 
-    /* Guardar nueva lista */
+    /*
+       IMPORTANTE:
+       Ya NO se crea ninguna cancha de prueba.
+       Un pasaporte nuevo comienza en 0.
+    */
+
+
+    for (const cancha of canchas) {
+
+        const lat =
+            cancha.latitud ??
+            cancha.lat;
+
+        const lng =
+            cancha.longitud ??
+            cancha.logongitud ??
+            cancha.lng;
+
+
+        if (
+            lat == null ||
+            lng == null
+        ) {
+            continue;
+        }
+
+
+        const marcador =
+            L.marker(
+                [lat,lng],
+                {
+                    icon:
+                        basketballIcon
+                }
+            ).addTo(map);
+
+
+        marcador.bindPopup(
+            contenidoPopup(cancha)
+        );
+
+
+        if (
+            cancha.fotoPath ||
+            cancha.fotoRuta
+        ) {
+
+            const rutaFoto =
+                cancha.fotoPath ||
+                cancha.fotoRuta;
+
+
+            const {
+                data,
+                error
+            } =
+                await supabaseClient.storage
+                    .from("fotos-canchas")
+                    .createSignedUrl(
+                        rutaFoto,
+                        3600
+                    );
+
+
+            if (
+                !error &&
+                data &&
+                data.signedUrl
+            ) {
+
+                marcador.setPopupContent(
+                    contenidoPopup(
+                        cancha,
+                        data.signedUrl
+                    )
+                );
+            }
+
+        } else if (cancha.foto) {
+
+            marcador.setPopupContent(
+                contenidoPopup(
+                    cancha,
+                    cancha.foto
+                )
+            );
+        }
+    }
+
+
+    setTimeout(
+        reproducirLogrosPendientes,
+        600
+    );
+}
+
+
+cargarCanchas();
+
+
+/* =========================
+   MENÚ
+========================= */
+
+const menuButton =
+    document.getElementById(
+        "menuButton"
+    );
+
+const sideMenu =
+    document.getElementById(
+        "sideMenu"
+    );
+
+const overlay =
+    document.getElementById(
+        "overlay"
+    );
+
+
+menuButton.onclick = function() {
+
+    sideMenu.classList.toggle(
+        "open"
+    );
+
+    overlay.classList.toggle(
+        "show"
+    );
+};
+
+
+overlay.onclick = function() {
+
+    sideMenu.classList.remove(
+        "open"
+    );
+
+    overlay.classList.remove(
+        "show"
+    );
+};
+
+
+/* =========================
+   GALERÍA
+========================= */
+
+document.getElementById(
+    "galeriaPendiente"
+).onclick = function(event) {
+
+    event.preventDefault();
+
+    alert(
+        "📷 La galería estará disponible próximamente."
+    );
+};
+
+
+/* =========================
+   AGREGAR CANCHA
+========================= */
+
+document.getElementById(
+    "agregarCancha"
+).onclick = function(event) {
+
+    event.preventDefault();
+
+    sideMenu.classList.remove("open");
+    overlay.classList.remove("show");
+
+
+    alert(
+        "📍 Busca la cancha en el mapa y toca su ubicación exacta."
+    );
+
+
+    map.once(
+        "click",
+        function(e) {
+
+            const marcadorTemporal =
+                L.marker(
+                    [
+                        e.latlng.lat,
+                        e.latlng.lng
+                    ],
+                    {
+                        icon:
+                            basketballIcon,
+
+                        draggable:
+                            true
+                    }
+                ).addTo(map);
+
+
+            marcadorTemporal.bindPopup(`
+
+                <div style="
+                    text-align:center;
+                    width:190px;
+                    font-family:Arial,sans-serif;
+                ">
+
+                    <strong>
+                        🏀 Nueva cancha
+                    </strong>
+
+                    <p style="
+                        font-size:13px;
+                        margin:10px 0;
+                    ">
+                        ¿Es esta la ubicación correcta?
+                    </p>
+
+                    <button
+                        id="confirmarUbicacion"
+                        style="
+                            width:100%;
+                            border:none;
+                            padding:10px;
+                            margin-bottom:7px;
+                            border-radius:8px;
+                            background:#222;
+                            color:white;
+                            font-weight:bold;
+                            cursor:pointer;
+                        ">
+                        CONFIRMAR UBICACIÓN →
+                    </button>
+
+                    <button
+                        id="quitarBalon"
+                        style="
+                            width:100%;
+                            border:1px solid #ccc;
+                            padding:8px;
+                            border-radius:8px;
+                            background:white;
+                            color:#222;
+                            cursor:pointer;
+                        ">
+                        ✕ Quitar balón
+                    </button>
+
+                </div>
+            `);
+
+
+            marcadorTemporal.openPopup();
+
+
+            const popup =
+                marcadorTemporal
+                    .getPopup()
+                    .getElement();
+
+
+            popup.querySelector(
+                "#quitarBalon"
+            ).onclick = function() {
+
+                map.removeLayer(
+                    marcadorTemporal
+                );
+            };
+
+
+            popup.querySelector(
+                "#confirmarUbicacion"
+            ).onclick = function() {
+
+                const posicion =
+                    marcadorTemporal
+                        .getLatLng();
+
+
+                localStorage.setItem(
+                    "nuevaCanchaUbicacion",
+                    JSON.stringify({
+                        latitud:
+                            posicion.lat,
+
+                        longitud:
+                            posicion.lng
+                    })
+                );
+
+
+                window.location.href =
+                    "agregar-cancha.html";
+            };
+        }
+    );
+};
+
+
+/* =====================================================
+   MOTOR DE LOGROS
+===================================================== */
+
+let reproduciendoLogros = false;
+
+
+function reproducirLogrosPendientes() {
+
+    if (reproduciendoLogros) {
+        return;
+    }
+
+
+    const pendientes =
+        JSON.parse(
+            localStorage.getItem(
+                "logrosPendientesBasketballPassport"
+            )
+        ) || [];
+
+
+    if (pendientes.length === 0) {
+        return;
+    }
+
+
+    reproduciendoLogros = true;
+
+    reproducirSiguienteLogro();
+}
+
+
+function reproducirSiguienteLogro() {
+
+    let pendientes =
+        JSON.parse(
+            localStorage.getItem(
+                "logrosPendientesBasketballPassport"
+            )
+        ) || [];
+
+
+    if (pendientes.length === 0) {
+
+        reproduciendoLogros = false;
+
+        return;
+    }
+
+
+    const logro =
+        pendientes.shift();
+
+
+    /*
+       Lo quitamos de pendientes antes
+       de reproducirlo. Así no se repite
+       accidentalmente si se recarga.
+    */
 
     localStorage.setItem(
-
-        "canchasBasketballPassport",
-
-        JSON.stringify(canchas)
-
+        "logrosPendientesBasketballPassport",
+        JSON.stringify(pendientes)
     );
 
 
-    /* Limpiar selección */
+    mostrarCelebracion(
+        logro,
+        function() {
 
-    localStorage.removeItem(
-        "canchaSeleccionada"
+            setTimeout(
+                reproducirSiguienteLogro,
+                650
+            );
+        }
+    );
+}
+
+
+/* =========================
+   CELEBRACIÓN
+========================= */
+
+function mostrarCelebracion(
+    logro,
+    terminado
+) {
+
+    const celebracion =
+        document.getElementById(
+            "celebracionLogro"
+        );
+
+    const sticker =
+        document.getElementById(
+            "logroSticker"
+        );
+
+    const textos =
+        document.getElementById(
+            "logroTextos"
+        );
+
+
+    sticker.textContent =
+        logro.emoji;
+
+
+    document.getElementById(
+        "logroTitulo"
+    ).textContent =
+        logro.titulo;
+
+
+    document.getElementById(
+        "logroDescripcion"
+    ).textContent =
+        logro.texto;
+
+
+    sticker.className =
+        "logro-sticker";
+
+    textos.className =
+        "logro-textos";
+
+
+    celebracion.classList.add(
+        "activa"
     );
 
 
-    /* Volver al mapa */
+    requestAnimationFrame(
+        function() {
 
-    window.location.href =
-        "mapa.html";
+            requestAnimationFrame(
+                function() {
 
+                    celebracion.classList.add(
+                        "fondo"
+                    );
+                }
+            );
+        }
+    );
+
+
+    crearConfeti();
+
+
+    /* STICKER ENTRA */
+
+    setTimeout(
+        function() {
+
+            sticker.classList.add(
+                "pegando"
+            );
+        },
+        300
+    );
+
+
+    /* TEXTO ENTRA */
+
+    setTimeout(
+        function() {
+
+            textos.classList.add(
+                "visible"
+            );
+        },
+        900
+    );
+
+
+    /*
+       AQUÍ PERMANECE VISIBLE
+       APROXIMADAMENTE 2 SEGUNDOS
+    */
+
+    setTimeout(
+        function() {
+
+            textos.classList.remove(
+                "visible"
+            );
+
+            sticker.classList.remove(
+                "pegando"
+            );
+
+            sticker.classList.add(
+                "despegando"
+            );
+
+        },
+        3300
+    );
+
+
+    /* FONDO VUELVE */
+
+    setTimeout(
+        function() {
+
+            celebracion.classList.remove(
+                "fondo"
+            );
+
+        },
+        3900
+    );
+
+
+    /* TERMINA */
+
+    setTimeout(
+        function() {
+
+            celebracion.classList.remove(
+                "activa"
+            );
+
+            sticker.className =
+                "logro-sticker";
+
+            textos.className =
+                "logro-textos";
+
+
+            celebracion
+                .querySelectorAll(
+                    ".confeti"
+                )
+                .forEach(
+                    elemento =>
+                        elemento.remove()
+                );
+
+
+            if (terminado) {
+                terminado();
+            }
+
+        },
+        4700
+    );
+}
+
+
+/* =========================
+   CONFETI
+========================= */
+
+function crearConfeti() {
+
+    const celebracion =
+        document.getElementById(
+            "celebracionLogro"
+        );
+
+
+    const colores = [
+        "#ff9f1c",
+        "#ffd166",
+        "#ffffff",
+        "#4cc9f0",
+        "#ef476f",
+        "#06d6a0"
+    ];
+
+
+    /*
+       50 PIEZAS:
+       25 POR CADA LADO
+    */
+
+    const cantidadPorLado = 25;
+
+
+    for (
+        let lado = 0;
+        lado < 2;
+        lado++
+    ) {
+
+        for (
+            let i = 0;
+            i < cantidadPorLado;
+            i++
+        ) {
+
+            const pieza =
+                document.createElement(
+                    "div"
+                );
+
+
+            pieza.className =
+                "confeti";
+
+
+            const izquierda =
+                lado === 0;
+
+
+            pieza.style.left =
+                izquierda
+                    ? "-12px"
+                    : "calc(100% + 12px)";
+
+
+            pieza.style.top =
+                (
+                    25 +
+                    Math.random() * 55
+                ) + "%";
+
+
+            pieza.style.background =
+                colores[
+                    Math.floor(
+                        Math.random() *
+                        colores.length
+                    )
+                ];
+
+
+            const medio =
+                90 +
+                Math.random() * 170;
+
+
+            const final =
+                150 +
+                Math.random() * 240;
+
+
+            pieza.style.setProperty(
+                "--x-medio",
+                (
+                    izquierda
+                        ? medio
+                        : -medio
+                ) + "px"
+            );
+
+
+            pieza.style.setProperty(
+                "--x-final",
+                (
+                    izquierda
+                        ? final
+                        : -final
+                ) + "px"
+            );
+
+
+            pieza.style.setProperty(
+                "--y-subida",
+                (
+                    -100 -
+                    Math.random() * 260
+                ) + "px"
+            );
+
+
+            pieza.style.setProperty(
+                "--duracion",
+                (
+                    3.1 +
+                    Math.random() * 1.5
+                ) + "s"
+            );
+
+
+            pieza.style.setProperty(
+                "--retraso",
+                (
+                    Math.random() * .8
+                ) + "s"
+            );
+
+
+            pieza.style.width =
+                (
+                    6 +
+                    Math.random() * 5
+                ) + "px";
+
+
+            pieza.style.height =
+                (
+                    9 +
+                    Math.random() * 9
+                ) + "px";
+
+
+            celebracion.appendChild(
+                pieza
+            );
+        }
+    }
+}
+
+
+/* =========================
+   CERRAR SESIÓN
+========================= */
+
+document.getElementById(
+    "cerrarSesion"
+).onclick = async function(event) {
+
+    event.preventDefault();
+
+    await supabaseClient.auth.signOut();
+
+    window.location.replace(
+        "index.html"
+    );
 };
 
 </script>
